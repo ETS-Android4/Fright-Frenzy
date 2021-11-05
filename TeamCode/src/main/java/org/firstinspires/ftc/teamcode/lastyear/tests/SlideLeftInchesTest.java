@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.lastyear.tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.lastyear.RepresentoBotMVP;
@@ -8,6 +9,8 @@ import org.firstinspires.ftc.teamcode.lastyear.RepresentoBotMVP;
 /**
  * Expected Result: Robot slides left 50 inches
  */
+
+@Disabled
 @Autonomous(group = "Tests")
 public class SlideLeftInchesTest extends LinearOpMode {
     @Override

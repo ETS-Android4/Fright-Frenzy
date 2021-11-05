@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.lastyear.tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.lastyear.RepresentoBotMVP;
 
+@Disabled
 @Autonomous
 public class TestCaseSimple extends LinearOpMode {
     RepresentoBotMVP bot;

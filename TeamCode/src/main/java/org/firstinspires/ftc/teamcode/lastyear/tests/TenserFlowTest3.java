@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.lastyear.tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.lastyear.RepresentoBotMVP;
 import org.firstinspires.ftc.teamcode.lastyear.RingResult;
 import org.firstinspires.ftc.teamcode.lastyear.UltimateVuforia;
 
+@Disabled
 @Autonomous
 public class TenserFlowTest3 extends LinearOpMode {
     @Override

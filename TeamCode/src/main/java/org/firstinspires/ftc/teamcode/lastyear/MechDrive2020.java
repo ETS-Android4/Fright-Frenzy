@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.lastyear;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.vuforia.Vuforia;
 
-
+@Disabled
 @TeleOp
 public class MechDrive2020 extends LinearOpMode {
 

@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.lastyear.tests;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.lastyear.UltimateVuforia;
 
+@Disabled
 @TeleOp
 public class RingCountTest extends LinearOpMode {
 

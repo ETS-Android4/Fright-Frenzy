@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.lastyear.colorSensor;
 
 import android.graphics.Color;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -40,6 +41,7 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import java.util.ArrayList;
 import java.util.List;
 
+@Disabled
 @TeleOp
 public class ColorCalabb extends LinearOpMode {
 
