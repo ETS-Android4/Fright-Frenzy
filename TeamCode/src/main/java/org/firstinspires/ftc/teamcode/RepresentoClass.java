@@ -30,13 +30,15 @@ public class RepresentoClass {
 
     private Gyro gyro;
     private LinearOpMode opMode;
-    private DistanceSensor sensorDistance;
+    private DistanceSensor distanceSensor;
     private NormalizedColorSensor sensorColor;
     ModernRoboticsI2cRangeSensor rangeSensor;
     private Gyro2 miniGyro;
     private DcMotor convoy;
     private Servo miniSweep;
     private DcMotor sweeper;
+    private DcMotor linearSlideMotor;
+    private Servo cargoServo;
 
     private java.util.Timer timeKeeper = new java.util.Timer();
 
@@ -47,6 +49,8 @@ public class RepresentoClass {
         frontLeftMotor = opMode.hardwareMap.get(DcMotor.class, "motor1");
         frontRightMotor = opMode.hardwareMap.get(DcMotor.class, "motor2");
         backRightMotor = opMode.hardwareMap.get(DcMotor.class, "motor3");
+        linearSlideMotor = opMode.hardwareMap.get(DcMotor.class, "slide");
+        cargoServo = opMode.hardwareMap.get(Servo.class, "servo1");
         claw = opMode.hardwareMap.get(Servo.class, "claw");
         elbow = opMode.hardwareMap.get(DcMotor.class, "elbow");
         BNO055IMU imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
@@ -55,6 +59,7 @@ public class RepresentoClass {
         thrower = opMode.hardwareMap.get(DcMotor.class, "thrower");
         convoy = opMode.hardwareMap.get(DcMotor.class, "convey2");
         gyro = new Gyro(imu, opMode);
+        distanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "sensor4");
         //stoneServo = opMode.hardwareMap.get(Servo.class, "stoneServo");
 
         //stops movement of robot quickly.
@@ -62,6 +67,7 @@ public class RepresentoClass {
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void startGyro(){
@@ -130,49 +136,6 @@ public class RepresentoClass {
         backRightMotor.setPower(0.0);
         frontRightMotor.setPower(0.0);
         // stops motors
-    }
-
-    public void forwardUntilDistance(double until, double power) {
-        double rightY_G1 = 1.0 * power;
-        double rightX_G1 = 0.0;
-        double leftX_G1 = 0.0;
-        // sets power
-
-        frontLeftMotor.setPower((rightX_G1 + rightY_G1 - leftX_G1));
-        backLeftMotor.setPower((rightX_G1 + rightY_G1 + leftX_G1));
-        backRightMotor.setPower((rightX_G1 - rightY_G1 + leftX_G1));
-        frontRightMotor.setPower((rightX_G1 - rightY_G1 - leftX_G1));
-        // connects motors to the correct variable(s)
-
-        miniGyro.reset();
-        while (opMode.opModeIsActive()) {
-            if (sensorDistance.getDistance(DistanceUnit.INCH) < until) {
-                break;
-            }
-
-            if (miniGyro.getAngle() > MAX_ANGLE) {
-                turnRight(ANGLE_ADJ_PERC * miniGyro.getAngle(), ANGLE_ADJ_SPEED);
-                frontLeftMotor.setPower((rightX_G1 + rightY_G1 - leftX_G1));
-                backLeftMotor.setPower((rightX_G1 + rightY_G1 + leftX_G1));
-                backRightMotor.setPower((rightX_G1 - rightY_G1 + leftX_G1));
-                frontRightMotor.setPower((rightX_G1 - rightY_G1 - leftX_G1));
-
-            } else if (miniGyro.getAngle() < -MAX_ANGLE) {
-                turnLeft(-ANGLE_ADJ_PERC * miniGyro.getAngle(), ANGLE_ADJ_SPEED);
-                frontLeftMotor.setPower((rightX_G1 + rightY_G1 - leftX_G1));
-                backLeftMotor.setPower((rightX_G1 + rightY_G1 + leftX_G1));
-                backRightMotor.setPower((rightX_G1 - rightY_G1 + leftX_G1));
-                frontRightMotor.setPower((rightX_G1 - rightY_G1 - leftX_G1));
-
-            }
-        }
-        // sets the distance sensor to go until we are inches away from something
-
-        frontLeftMotor.setPower(0.0);
-        backLeftMotor.setPower(0.0);
-        backRightMotor.setPower(0.0);
-        frontRightMotor.setPower(0.0);
-        // stops motor
     }
 
     public void slide (double power, double distance) {
@@ -450,5 +413,29 @@ public class RepresentoClass {
 
         // sets motors to zero
         stopMotor();
+    }
+
+    public void raiseCargo(int level) {
+        double distance;
+        double placeholder = level - 1;
+        if (level == 1) {
+            distance = placeholder;
+        } else if (level == 2) {
+            distance = placeholder;
+        } else {
+            distance = placeholder;
+        }
+        while (distanceSensor.getDistance(DistanceUnit.INCH) <= distance) {
+            linearSlideMotor.setPower(1);
+        }
+        linearSlideMotor.setPower(0.2);
+        placeCargo();
+        linearSlideMotor.setPower(0);
+    }
+
+    public void placeCargo() {
+        cargoServo.setPosition(1);
+        opMode.sleep(1000);
+        cargoServo.setPosition(0);
     }
 }

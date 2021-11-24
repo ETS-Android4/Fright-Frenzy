@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp
-class MotorPowerTest extends LinearOpMode {
+public class MotorPowerTest extends LinearOpMode {
     private DcMotor linear;
 
     @Override

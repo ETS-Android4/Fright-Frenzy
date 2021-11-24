@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.RepresentoClass;
 
 @Autonomous
-class BlueDuckAuto extends LinearOpMode {
+public class BlueDuckAuto extends LinearOpMode {
     RepresentoClass b = new RepresentoClass(this);
     public void runOpMode() throws InterruptedException {
         //identify where the duck is, what level the cargo goes on
@@ -14,8 +14,7 @@ class BlueDuckAuto extends LinearOpMode {
         //spins the duck carousel
         b.slide(-0.5, 48); // goes lift 48 inches
         b.goForward(0.4, 24); //goes forward to hub
-        //raise cargo to the correct height
-        //place cargo
+        b.raiseCargo(1/*what level is the duck at?*/); //raises linear slide and places cargo
         b.slide(0.5, 48); //slides right 48 inches
         b.stopMotor(); //ensures all motors are not moving
     }
