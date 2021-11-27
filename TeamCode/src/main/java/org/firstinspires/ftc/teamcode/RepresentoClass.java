@@ -416,14 +416,16 @@ public class RepresentoClass {
     }
 
     public void raiseCargo(int level) {
+        cargoServo.setPosition(0);
         double distance;
-        double placeholder = level - 1;
+        //sensor is 4.75 inches from ground
+        //sensor is 1.5 inches from linear slide in resting position
         if (level == 1) {
-            distance = placeholder;
+            distance = 2;
         } else if (level == 2) {
-            distance = placeholder;
+            distance = 7.5;
         } else {
-            distance = placeholder;
+            distance = 14.75;
         }
         while (distanceSensor.getDistance(DistanceUnit.INCH) <= distance) {
             linearSlideMotor.setPower(1);
@@ -431,6 +433,7 @@ public class RepresentoClass {
         linearSlideMotor.setPower(0.2);
         placeCargo();
         linearSlideMotor.setPower(0);
+        cargoServo.setPosition(1);
     }
 
     public void placeCargo() {
