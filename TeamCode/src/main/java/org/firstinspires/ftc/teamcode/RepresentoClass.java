@@ -420,12 +420,13 @@ public class RepresentoClass {
         double distance;
         //sensor is 4.75 inches from ground
         //sensor is 1.5 inches from linear slide in resting position
+        //bucket is 2 inches less than the slide
         if (level == 1) {
             distance = 2;
         } else if (level == 2) {
-            distance = 7.5;
+            distance = 5;
         } else {
-            distance = 14.75;
+            distance = 11;
         }
         while (distanceSensor.getDistance(DistanceUnit.INCH) <= distance) {
             linearSlideMotor.setPower(1);
