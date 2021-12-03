@@ -433,6 +433,9 @@ public class RepresentoClass {
         }
         linearSlideMotor.setPower(0.2);
         placeCargo();
+        while (distanceSensor.getDistance(DistanceUnit.INCH) > 2) {
+            linearSlideMotor.setPower(-0.3);
+        }
         linearSlideMotor.setPower(0);
         cargoServo.setPosition(1);
     }
