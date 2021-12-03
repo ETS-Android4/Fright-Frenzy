@@ -376,6 +376,7 @@ public class UltimateVuforia {
     }
 
     public RingResult getRings() {
+
         float bestConf = 0;
         RingResult result = new RingResult(-1, 0);
 
