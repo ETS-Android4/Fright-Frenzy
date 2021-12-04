@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.util;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -13,6 +12,11 @@ public class DriveYeet extends LinearOpMode {
     private DcMotor frontLeftMotor;
     private DcMotor backRightMotor;
     private DcMotor frontRightMotor;
+    private DcMotor spinner;
+    private DcMotor sweepo;
+    private DcMotor slide;
+    private Servo cargo;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -23,10 +27,10 @@ public class DriveYeet extends LinearOpMode {
         // --spinner servo
 
         // type name = value
-        DcMotor sweepomode = hardwareMap.get(DcMotor.class, "sweepo");
-        DcMotor slipnslide = hardwareMap.get(DcMotor.class, "slide");
-        Servo boxservo = hardwareMap.get(Servo.class, "boxservo");
-        CRServo beyblade = hardwareMap.get(CRServo.class, "spinner");
+        sweepo = hardwareMap.get(DcMotor.class, "sweepo");
+        slide = hardwareMap.get(DcMotor.class, "slide");
+        cargo = hardwareMap.get(Servo.class, "boxservo");
+        spinner = hardwareMap.get(DcMotor.class, "spinner");
         backLeftMotor = hardwareMap.get(DcMotor.class, "motor0");
         frontLeftMotor = hardwareMap.get(DcMotor.class, "motor1");
         frontRightMotor = hardwareMap.get(DcMotor.class, "motor2");
@@ -36,6 +40,7 @@ public class DriveYeet extends LinearOpMode {
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        spinner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
         while (opModeIsActive()){
@@ -66,25 +71,25 @@ public class DriveYeet extends LinearOpMode {
             // --linear slide motor
             // --spinner servo
 
-            sweepomode.setPower(-gamepad2.right_trigger);
-            slipnslide.setPower(gamepad2.left_stick_y);
+            sweepo.setPower(-gamepad2.right_trigger);
+            slide.setPower(gamepad2.left_stick_y);
 
             if (gamepad2.right_bumper){
-                beyblade.setPower(1.0);
+                spinner.setPower(1.0);
             } else if (gamepad2.left_bumper) {
-                beyblade.setPower(-1.);
+                spinner.setPower(-1.0);
             } else {
-                beyblade.setPower(0.0);
+                spinner.setPower(0.0);
             }
 
             if (gamepad2.dpad_up){
-                boxservo.setPosition(0.0);
+                cargo.setPosition(0.0);
             }
             else if (gamepad2.dpad_right){
-                boxservo.setPosition(0.5);
+                cargo.setPosition(0.5);
             }
             else{
-                boxservo.setPosition(1.0);
+                cargo.setPosition(1.0);
 
             }
             // don't allow the linear slide to go up until basket is vertcal
