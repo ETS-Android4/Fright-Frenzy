@@ -68,8 +68,11 @@ public class DriveYeet extends LinearOpMode {
 
             sweepomode.setPower(-gamepad2.right_trigger);
             slipnslide.setPower(gamepad2.left_stick_y);
-            if (gamepad2.right_bumper == true){
+
+            if (gamepad2.right_bumper){
                 beyblade.setPower(1.0);
+            } else if (gamepad2.left_bumper) {
+                beyblade.setPower(-1.);
             } else {
                 beyblade.setPower(0.0);
             }

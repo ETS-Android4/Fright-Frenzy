@@ -40,7 +40,8 @@ public class RepresentoClass {
     private DcMotor linearSlideMotor;
     private Servo cargoServo;
 
-    private java.util.Timer timeKeeper = new java.util.Timer();
+    //private java.util.Timer timeKeeper = new java.util.Timer();
+    private org.firstinspires.ftc.teamcode.lastyear.Timer timer = new org.firstinspires.ftc.teamcode.lastyear.Timer();
 
     public RepresentoClass (LinearOpMode om) {
         this.opMode = om;
@@ -443,6 +444,14 @@ public class RepresentoClass {
     public void placeCargo() {
         cargoServo.setPosition(1);
         opMode.sleep(1000);
+        cargoServo.setPosition(0);
+    }
+
+    public void pickUpCargo() {
+        cargoServo.setPosition(1);
+        sweeper.setPower(1);
+        timer.waitT(500);
+        sweeper.setPower(0);
         cargoServo.setPosition(0);
     }
 }
