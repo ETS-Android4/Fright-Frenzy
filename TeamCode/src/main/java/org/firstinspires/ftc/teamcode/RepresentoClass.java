@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.lastyear.Gyro;
 import org.firstinspires.ftc.teamcode.lastyear.Gyro2;
+import org.firstinspires.ftc.teamcode.lastyear.Timer;
 
 public class RepresentoClass {
 
@@ -23,10 +24,7 @@ public class RepresentoClass {
     private DcMotor frontLeftMotor;
     private DcMotor frontRightMotor;
     private DcMotor backRightMotor;
-    private DcMotor shoot;
-    private DcMotor elbow;
-    private Servo claw;
-    private DcMotor thrower;
+    private DcMotor spinner;
 
     private Gyro gyro;
     private LinearOpMode opMode;
@@ -34,14 +32,12 @@ public class RepresentoClass {
     private NormalizedColorSensor sensorColor;
     ModernRoboticsI2cRangeSensor rangeSensor;
     private Gyro2 miniGyro;
-    private DcMotor convoy;
-    private Servo miniSweep;
     private DcMotor sweeper;
     private DcMotor linearSlideMotor;
     private Servo cargoServo;
 
     //private java.util.Timer timeKeeper = new java.util.Timer();
-    private org.firstinspires.ftc.teamcode.lastyear.Timer timer = new org.firstinspires.ftc.teamcode.lastyear.Timer();
+    private Timer timer;
 
     public RepresentoClass (LinearOpMode om) {
         this.opMode = om;
@@ -51,16 +47,12 @@ public class RepresentoClass {
         frontRightMotor = opMode.hardwareMap.get(DcMotor.class, "motor2");
         backRightMotor = opMode.hardwareMap.get(DcMotor.class, "motor3");
         linearSlideMotor = opMode.hardwareMap.get(DcMotor.class, "slide");
-        cargoServo = opMode.hardwareMap.get(Servo.class, "servo1");
-        claw = opMode.hardwareMap.get(Servo.class, "claw");
-        elbow = opMode.hardwareMap.get(DcMotor.class, "elbow");
+        cargoServo = opMode.hardwareMap.get(Servo.class, "boxservo");
         BNO055IMU imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
-        miniSweep = opMode.hardwareMap.get(Servo.class, "servoSweep");
-        sweeper = opMode.hardwareMap.get(DcMotor.class, "sweeper");
-        thrower = opMode.hardwareMap.get(DcMotor.class, "thrower");
-        convoy = opMode.hardwareMap.get(DcMotor.class, "convey2");
+        spinner = opMode.hardwareMap.get(DcMotor.class, "spinner");
         gyro = new Gyro(imu, opMode);
         distanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "sensor4");
+        sweeper = opMode.hardwareMap.get(DcMotor.class, "sweepo");
         //stoneServo = opMode.hardwareMap.get(Servo.class, "stoneServo");
 
         //stops movement of robot quickly.
@@ -69,6 +61,7 @@ public class RepresentoClass {
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        sweeper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void startGyro(){
@@ -361,10 +354,10 @@ public class RepresentoClass {
         // inches to time formula
     }
 
-    public void dropSweep() {
-        miniSweep.setPosition(-1);
-        opMode.sleep(500);
-    }
+//    public void dropSweep() {
+//        miniSweep.setPosition(-1);
+//        opMode.sleep(500);
+//    }
 
     public void goForwardRamp(double power, double distance){
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -417,7 +410,7 @@ public class RepresentoClass {
     }
 
     public void raiseCargo(int level) {
-        cargoServo.setPosition(0);
+        cargoServo.setPosition(0.5);
         double distance;
         //sensor is 4.75 inches from ground
         //sensor is 1.5 inches from linear slide in resting position
@@ -444,7 +437,7 @@ public class RepresentoClass {
     public void placeCargo() {
         cargoServo.setPosition(1);
         opMode.sleep(1000);
-        cargoServo.setPosition(0);
+        cargoServo.setPosition(0.5);
     }
 
     public void pickUpCargo() {
@@ -453,5 +446,11 @@ public class RepresentoClass {
         timer.waitT(500);
         sweeper.setPower(0);
         cargoServo.setPosition(0);
+    }
+
+    public void duckSpin(long time) {
+        spinner.setPower(1);
+        timer.waitT(time * 100);
+        spinner.setPower(0);
     }
 }

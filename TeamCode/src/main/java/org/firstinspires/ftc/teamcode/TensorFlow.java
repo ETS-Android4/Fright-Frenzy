@@ -54,6 +54,42 @@ public class TensorFlow {
         }
     }
 
+    public boolean isDuck () {
+        boolean OTF = false;
+        if (tfod != null) {
+            op.telemetry.addData("TFOD", "NOT NULL");
+            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                op.telemetry.addData("RECLIST: ", "NOT NULL");
+                //op.telemetry.addData("# Object Detected", updatedRecognitions.size());
+                int i = 0;
+                for (Recognition recognition : updatedRecognitions) {
+                    //if (recognition.getBottom()>= 800) {
+                    //op.telemetry.addData(String.format("height", i), recognition.getHeight());
+                    //op.telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                    //op.telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                    //        recognition.getLeft(), recognition.getTop());
+                    //op.telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                    //        recognition.getRight(), recognition.getBottom());
+                    if (recognition.getLabel().equals("Duck")) {
+                        OTF = true;
+                    } else {
+                        OTF = false;
+                    }
+
+                    op.telemetry.addData("Duck: ", OTF);
+                    op.telemetry.update();
+                }
+                op.telemetry.update();
+            } else {
+                op.telemetry.addData("RECLIST", "NULL");
+            }
+        } else {
+            op.telemetry.addData("TFOD", "NULL");
+        }
+        return OTF;
+    }
+
     public void turnOff() {
         // TODO: turn off tensor flow
         tfod.shutdown();

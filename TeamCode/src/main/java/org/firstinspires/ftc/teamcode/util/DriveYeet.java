@@ -82,15 +82,14 @@ public class DriveYeet extends LinearOpMode {
                 spinner.setPower(0.0);
             }
 
-            if (gamepad2.dpad_up){
+            if (gamepad2.y){
                 cargo.setPosition(0.0);
             }
-            else if (gamepad2.dpad_right){
+            else if (gamepad2.b){
                 cargo.setPosition(0.5);
             }
             else{
                 cargo.setPosition(1.0);
-
             }
             // don't allow the linear slide to go up until basket is vertcal
 
