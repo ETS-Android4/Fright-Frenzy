@@ -13,11 +13,12 @@ public class BlueDuckAuto extends LinearOpMode {
         RepresentoClass b = new RepresentoClass(this);
         TensorFlow t = new TensorFlow(this);
         t.turnOn();
+        b.startGyro();
         waitForStart();
         //identify where the duck is, what level the cargo goes on
-        b.slide(0.5, 28); //goes right 24 inches
+        b.slide(0.5, 20); //goes right 24 inches
         b.duckSpin(5); //spins the duck carousel
-        b.slide(-0.5, 28); // goes left 24 inches
+        b.slide(-0.5, 20); // goes left 24 inches
         b.goForward(0.4, 15); //goes forward to blocks
         if(t.isDuck()) { //sees if duck is in middle spot
             level = 2;

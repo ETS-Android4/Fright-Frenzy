@@ -3,7 +3,10 @@ package org.firstinspires.ftc.teamcode.util;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp
 public class DriveYeet extends LinearOpMode {
@@ -16,6 +19,9 @@ public class DriveYeet extends LinearOpMode {
     private DcMotor sweepo;
     private DcMotor slide;
     private Servo cargo;
+    private Servo iconServoR;
+    private Servo iconServoL;
+    private DistanceSensor distanceSensor;
 
 
     @Override
@@ -30,11 +36,15 @@ public class DriveYeet extends LinearOpMode {
         sweepo = hardwareMap.get(DcMotor.class, "sweepo");
         slide = hardwareMap.get(DcMotor.class, "slide");
         cargo = hardwareMap.get(Servo.class, "boxservo");
+        iconServoR = hardwareMap.get(Servo.class, "servo1");
+        iconServoL = hardwareMap.get(Servo.class, "servo0");
         spinner = hardwareMap.get(DcMotor.class, "spinner");
         backLeftMotor = hardwareMap.get(DcMotor.class, "motor0");
         frontLeftMotor = hardwareMap.get(DcMotor.class, "motor1");
         frontRightMotor = hardwareMap.get(DcMotor.class, "motor2");
         backRightMotor = hardwareMap.get(DcMotor.class, "motor3");
+        distanceSensor = hardwareMap.get(DistanceSensor.class, "sensor4");
+
 
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -72,7 +82,18 @@ public class DriveYeet extends LinearOpMode {
             // --spinner servo
 
             sweepo.setPower(-gamepad2.right_trigger);
-            slide.setPower(gamepad2.left_stick_y);
+
+            if (gamepad2.dpad_up) {
+                slide.setPower(1);
+            } else if (gamepad2.dpad_down) {
+                slide.setPower(-1);
+            } else {
+                slide.setPower(0);
+            }
+
+            if (distanceSensor.getDistance(DistanceUnit.INCH) > 4 && distanceSensor.getDistance(DistanceUnit.INCH) < 6 && gamepad2.left_stick_y > 0) {
+                cargo.setPosition(0.5);
+            }
 
             if (gamepad2.right_bumper){
                 spinner.setPower(1.0);
@@ -92,6 +113,17 @@ public class DriveYeet extends LinearOpMode {
                 cargo.setPosition(1.0);
             }
             // don't allow the linear slide to go up until basket is vertcal
+
+            if (gamepad1.a) {
+                iconServoL.setPosition(1);
+                iconServoR.setPosition(0);
+            } else if (gamepad1.b) {
+                iconServoL.setPosition(1);
+                iconServoR.setPosition(1);
+            } else if (gamepad1.y) {
+                iconServoL.setPosition(0);
+                iconServoR.setPosition(0);
+            }
 
         }
     }

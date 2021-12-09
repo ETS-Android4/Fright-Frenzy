@@ -146,7 +146,9 @@ public class RepresentoClass {
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // sets encoder
 
-        miniGyro.reset();
+        if (miniGyro != null) {
+            miniGyro.reset();
+        }
         long ticks = ticksToInchesSlide(distance);
         while (opMode.opModeIsActive()) {
             int rotations = frontRightMotor.getCurrentPosition();
@@ -197,7 +199,9 @@ public class RepresentoClass {
         // sets the correct variables to the motors
 
         long ticks = ticksToInchesForward(distance);
-        miniGyro.reset();
+        if (miniGyro != null) {
+            miniGyro.reset();
+        }
         while (opMode.opModeIsActive()) {
             int rotations = frontRightMotor.getCurrentPosition();
             if (rotations<0) {
@@ -252,7 +256,9 @@ public class RepresentoClass {
 
 
 
-        miniGyro.reset();
+        if (miniGyro != null) {
+            miniGyro.reset();
+        }
         while (opMode.opModeIsActive()) {
             int rotations = frontRightMotor.getCurrentPosition();
             if (rotations<0) {
@@ -346,8 +352,8 @@ public class RepresentoClass {
         // ticks forward formula
     }
     public long ticksToInchesSlide(double inches) {
-        return (long) (inches * 74.6);
-        // tick to slide inches formula
+        return (long) (inches * 52);
+        // tick to slide inches formula 74.6
     }
     public long inchesToTime(double inches, double power) {
         return (long) (0.0384 * inches * 500.0 / power);
@@ -374,7 +380,9 @@ public class RepresentoClass {
 
         // TODO: set the rightY_G1 start speed to a low value, but not so low the motors won't turn
 
-        miniGyro.reset();
+        if (miniGyro != null) {
+            miniGyro.reset();
+        }
         while (opMode.opModeIsActive()) {
             int rotations = frontRightMotor.getCurrentPosition();
             if (rotations<0) {
