@@ -16,6 +16,7 @@ public class ElevatorBoxTest extends LinearOpMode {
         Servo cargo = hardwareMap.get(Servo.class, "boxservo");
         DistanceSensor distanceSensor = hardwareMap.get(DistanceSensor.class, "sensor4");
 
+        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         waitForStart();
 
         while (opModeIsActive()) {

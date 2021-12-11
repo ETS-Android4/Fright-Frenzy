@@ -69,6 +69,16 @@ public class RepresentoClass {
         miniGyro = gyro.getMiniGyro();
     }
 
+    public double ramp(double power, long startTime) {
+        // ramp for 0.75 seconds
+        long t = System.currentTimeMillis() - startTime;
+        if (t >= 750) {
+            return power;
+        } else {
+            return power / 750 * t;
+        }
+    }
+
     public void turnRight(double degrees, double power) {
         //
         gyro.resetWithDirection(Gyro.RIGHT);
@@ -150,6 +160,7 @@ public class RepresentoClass {
             miniGyro.reset();
         }
         long ticks = ticksToInchesSlide(distance);
+        long start = System.currentTimeMillis();
         while (opMode.opModeIsActive()) {
             int rotations = frontRightMotor.getCurrentPosition();
             if (rotations<0) {
@@ -168,6 +179,7 @@ public class RepresentoClass {
             // if rightX_G1 < 0 then robot will turn left
             // if rightX_G1 > 0 then robot will turn right
             rightX_G1 = -1.0 * angle * 0.022;
+            leftX_G1 = ramp(-power, start);
 
             frontLeftMotor.setPower((rightX_G1 + rightY_G1 - leftX_G1));
             backLeftMotor.setPower((rightX_G1 + rightY_G1 + leftX_G1));
@@ -182,7 +194,7 @@ public class RepresentoClass {
         frontRightMotor.setPower(0);
     }
 
-    public void goForward(double power, double distance){
+    public void goForwardOld(double power, double distance){
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // sets the encoders
@@ -198,10 +210,12 @@ public class RepresentoClass {
         frontRightMotor.setPower((rightX_G1 - rightY_G1 - leftX_G1));
         // sets the correct variables to the motors
 
-        long ticks = ticksToInchesForward(distance);
         if (miniGyro != null) {
             miniGyro.reset();
         }
+
+        long ticks = ticksToInchesForward(distance);
+        long start = System.currentTimeMillis();
         while (opMode.opModeIsActive()) {
             int rotations = frontRightMotor.getCurrentPosition();
             if (rotations<0) {
@@ -234,31 +248,22 @@ public class RepresentoClass {
         // sets motors to zero
     }
 
-    public void goForwardGyroErrorCorrection(double power, double distance){
+    public void goForward(double power, double distance){
+        // sets the encoders
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        // sets the encoders
 
         double rightY_G1 = 1.0 * power;
         double rightX_G1 = 0.0;
         double leftX_G1 = 0.0;
-        // sets power
-
-        // sets the correct variables to the motors
-
-        long ticks = ticksToInchesForward(distance);
-
-        double minPower = 0.3;
-        if(power < 0) {
-            minPower = minPower * -1.0;
-        }
-        double increment = (power - minPower) / 2.0;
-
-
 
         if (miniGyro != null) {
             miniGyro.reset();
         }
+
+        long ticks = ticksToInchesForward(distance);
+        long start = System.currentTimeMillis();
+
         while (opMode.opModeIsActive()) {
             int rotations = frontRightMotor.getCurrentPosition();
             if (rotations<0) {
@@ -267,24 +272,6 @@ public class RepresentoClass {
             if (rotations >= ticks) {
                 break;
             }
-
-            long rem = ticks - rotations;
-            if(rotations < 360) {
-                rightY_G1 = minPower;
-            } else if( rotations >= 360 && rotations < 720) {
-                rightY_G1 = minPower + increment;
-            } else if(rem < 360) {
-                rightY_G1 = minPower;
-            } else if( rem >= 360 && rem < 720) {
-                rightY_G1 = minPower + increment;
-            }  else  {
-                rightY_G1 = power;
-            }
-
-            // slow down the last 4 inches
-            //if(ticks - rotations < 160) {
-            //    rightY_G1 = power * 0.5;
-            //}
 
             // Get the current heading; anything other than 0 is off course
             // this will return positive angle if drifting CCW
@@ -295,6 +282,7 @@ public class RepresentoClass {
             // if rightX_G1 < 0 then robot will turn left
             // if rightX_G1 > 0 then robot will turn right
             rightX_G1 = -1.0 * angle * 0.022;
+            rightY_G1 = ramp(power, start);
 
             frontLeftMotor.setPower((rightX_G1 + rightY_G1 - leftX_G1));
             backLeftMotor.setPower((rightX_G1 + rightY_G1 + leftX_G1));
@@ -313,10 +301,6 @@ public class RepresentoClass {
         double leftX_G1 = 0.0;
         // sets power
 
-        frontLeftMotor.setPower((rightX_G1 + rightY_G1 - leftX_G1));
-        backLeftMotor.setPower((rightX_G1 + rightY_G1 + leftX_G1));
-        backRightMotor.setPower((rightX_G1 - rightY_G1 + leftX_G1));
-        frontRightMotor.setPower((rightX_G1 - rightY_G1 - leftX_G1));
         // sets the correct variables to the motors
 
         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -324,6 +308,7 @@ public class RepresentoClass {
         // sets the encoders
 
         long ticks = ticksToInchesForward(distance);
+        long start = System.currentTimeMillis();
 
         while (opMode.opModeIsActive()) {
             int rotations = backLeftMotor.getCurrentPosition();
@@ -334,7 +319,11 @@ public class RepresentoClass {
                 break;
             }
 
-            // makes inches transfer to ticks
+            rightY_G1 = ramp(power, start);
+            frontLeftMotor.setPower((rightX_G1 + rightY_G1 - leftX_G1));
+            backLeftMotor.setPower((rightX_G1 + rightY_G1 + leftX_G1));
+            backRightMotor.setPower((rightX_G1 - rightY_G1 + leftX_G1));
+            frontRightMotor.setPower((rightX_G1 - rightY_G1 - leftX_G1));
         }
 
         stopMotor();

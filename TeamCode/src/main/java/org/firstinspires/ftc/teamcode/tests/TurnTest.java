@@ -10,7 +10,8 @@ public class TurnTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         RepresentoClass bot = new RepresentoClass(this);
-
+        bot.startGyro();
+        waitForStart();
         bot.turnRight(180, 0.5);
     }
 }
