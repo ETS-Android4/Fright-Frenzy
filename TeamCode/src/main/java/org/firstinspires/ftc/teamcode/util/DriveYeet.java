@@ -51,6 +51,7 @@ public class DriveYeet extends LinearOpMode {
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         spinner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
         while (opModeIsActive()){
@@ -59,6 +60,7 @@ public class DriveYeet extends LinearOpMode {
             double rightY_G1;
             double leftX_G1;
             double leftY_G1;
+            double distance = distanceSensor.getDistance(DistanceUnit.INCH);
 
             rightY_G1 = -gamepad1.right_stick_y;
             rightX_G1 = -gamepad1.right_stick_x;
@@ -83,16 +85,24 @@ public class DriveYeet extends LinearOpMode {
 
             sweepo.setPower(-gamepad2.right_trigger);
 
-            if (gamepad2.dpad_up) {
-                slide.setPower(1);
-            } else if (gamepad2.dpad_down) {
+            if (gamepad2.dpad_up && distance < 4) {
+                slide.setPower(0.3);
+            } else if (gamepad2.dpad_up && distance >= 4) {
+                slide.setPower(1.0);
+            } else if (gamepad2.dpad_down && distance >= 2.5) {
                 slide.setPower(-1);
             } else {
                 slide.setPower(0);
             }
 
-            if (distanceSensor.getDistance(DistanceUnit.INCH) > 4 && distanceSensor.getDistance(DistanceUnit.INCH) < 6 && gamepad2.left_stick_y > 0) {
-                cargo.setPosition(0.5);
+            if (gamepad2.y && distance > 2.5 && cargo.getPosition() < 0.6){
+                cargo.setPosition(Servo.MIN_POSITION); // drop pos
+            }
+            else if(distance < 2.5 && !gamepad2.dpad_up) {
+                cargo.setPosition(Servo.MAX_POSITION); // ramp pos
+            }
+            else {
+                cargo.setPosition(0.5); // safe pose
             }
 
             if (gamepad2.right_bumper){
@@ -103,15 +113,12 @@ public class DriveYeet extends LinearOpMode {
                 spinner.setPower(0.0);
             }
 
-            if (gamepad2.y){
-                cargo.setPosition(Servo.MIN_POSITION);
-            }
-            else if (gamepad2.b){
-                cargo.setPosition(0.5);
-            }
-            else{
-                cargo.setPosition(Servo.MAX_POSITION);
-            }
+//            if (gamepad2.y){
+//                cargo.setPosition(Servo.MIN_POSITION);
+//            }
+//            else if (gamepad2.b){
+//                cargo.setPosition(0.5);
+//            }
             // don't allow the linear slide to go up until basket is vertcal
 
             if (gamepad1.a) {

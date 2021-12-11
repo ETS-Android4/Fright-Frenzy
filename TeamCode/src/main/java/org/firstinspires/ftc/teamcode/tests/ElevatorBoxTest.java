@@ -21,7 +21,6 @@ public class ElevatorBoxTest extends LinearOpMode {
 
         while (opModeIsActive()) {
             double distance = distanceSensor.getDistance(DistanceUnit.INCH);
-            boolean danger = distance > 2.5 && distance < 12 && cargo.getPosition() >= 0.6;
 
             if (gamepad2.dpad_up && distance < 4) {
                 slide.setPower(0.3);

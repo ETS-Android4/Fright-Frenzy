@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.lastyear.Gyro;
 import org.firstinspires.ftc.teamcode.lastyear.Gyro2;
 import org.firstinspires.ftc.teamcode.lastyear.Timer;
 
-public class RepresentoClass {
+public class RepBot {
 
     private static final double MAX_ANGLE = 5.0;
     private static final double ANGLE_ADJ_PERC = 0.2;
@@ -39,7 +39,7 @@ public class RepresentoClass {
     //private java.util.Timer timeKeeper = new java.util.Timer();
     private Timer timer4;
 
-    public RepresentoClass (LinearOpMode om) {
+    public RepBot (LinearOpMode om) {
         this.opMode = om;
 
         backLeftMotor = opMode.hardwareMap.get(DcMotor.class, "motor0");
@@ -56,10 +56,10 @@ public class RepresentoClass {
         //stoneServo = opMode.hardwareMap.get(Servo.class, "stoneServo");
 
         //stops movement of robot quickly.
-        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         sweeper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
@@ -337,8 +337,7 @@ public class RepresentoClass {
         frontRightMotor.setPower(0.0);
     }
     public long ticksToInchesForward(double inches) {
-        return (long) (inches * 38.7);
-        //38.4
+        return (long) (inches * 38.4);
         // ticks forward formula
     }
     public long ticksToInchesSlide(double inches) {
@@ -427,7 +426,7 @@ public class RepresentoClass {
             opMode.telemetry.update();
         }
         linearSlideMotor.setPower(0);
-        placeCargo();
+        shake();
         while (distanceSensor.getDistance(DistanceUnit.INCH) > 3) {
             linearSlideMotor.setPower(-0.3);
             opMode.telemetry.addData("Distance:", distance);
@@ -441,17 +440,6 @@ public class RepresentoClass {
         cargoServo.setPosition(0);
         opMode.sleep(1000);
         cargoServo.setPosition(0.5);
-        cargoServo.setPosition(0.7);
-        opMode.sleep(1000);
-        cargoServo.setPosition(0.7);
-        cargoServo.setPosition(1);
-        opMode.sleep(1000);
-        cargoServo.setPosition(0.7);
-        cargoServo.setPosition(1);
-        cargoServo.setPosition(0.7);
-        opMode.sleep(1000);
-        cargoServo.setPosition(1);
-        cargoServo.setPosition(0.5);
     }
 
     public void pickUpCargo() {
@@ -462,8 +450,22 @@ public class RepresentoClass {
         cargoServo.setPosition(0);
     }
 
+    public void shake() {
+        placeCargo();
+        placeCargo();
+        placeCargo();
+        placeCargo();
+        placeCargo();
+    }
+
     public void duckSpin() {
         spinner.setPower(1);
+        opMode.sleep(5000);
+        spinner.setPower(0);
+    }
+
+    public void duckSpinR() {
+        spinner.setPower(-1);
         opMode.sleep(5000);
         spinner.setPower(0);
     }
