@@ -164,8 +164,9 @@ public class FrieghtIconSee extends LinearOpMode
          * Working variables
          */
         Mat region1_Cb, region2_Cb, region3_Cb;
-        Mat YCrCb = new Mat();
-        Mat Cb = new Mat();
+        Mat hsv = new Mat();
+        //Mat Cb = new Mat();
+        Mat thresh = new Mat();
         int avg1, avg2, avg3;
 
         // Volatile since accessed by OpMode thread w/o synchronization
@@ -175,10 +176,10 @@ public class FrieghtIconSee extends LinearOpMode
          * This function takes the RGB frame, converts to YCrCb,
          * and extracts the Cb channel to the 'Cb' variable
          */
-        void inputToCb(Mat input)
+        void inputToHSV(Mat input)
         {
-            Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
-            Core.extractChannel(YCrCb, Cb, 2);
+            Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
+            //Core.extractChannel(hsv, Cb, 2);
         }
 
         @Override
@@ -193,16 +194,19 @@ public class FrieghtIconSee extends LinearOpMode
              * buffer would be re-allocated the first time a real frame
              * was crunched)
              */
-            inputToCb(firstFrame);
+            inputToHSV(firstFrame);
+
+            //TODO: Input
+            Core.inRange(hsv, new Scalar (42, 50, 90), new Scalar (59, 117, 255), thresh);
 
             /*
              * Submats are a persistent reference to a region of the parent
              * buffer. Any changes to the child affect the parent, and the
              * reverse also holds true.
              */
-            region1_Cb = Cb.submat(new Rect(region1_pointA, region1_pointB));
-            region2_Cb = Cb.submat(new Rect(region2_pointA, region2_pointB));
-            region3_Cb = Cb.submat(new Rect(region3_pointA, region3_pointB));
+            region1_Cb = thresh.submat(new Rect(region1_pointA, region1_pointB));
+            region2_Cb = thresh.submat(new Rect(region2_pointA, region2_pointB));
+            region3_Cb = thresh.submat(new Rect(region3_pointA, region3_pointB));
         }
 
         @Override
@@ -246,7 +250,11 @@ public class FrieghtIconSee extends LinearOpMode
             /*
              * Get the Cb channel of the input frame after conversion to YCrCb
              */
-            inputToCb(input);
+            inputToHSV(input);
+
+            //TODO: threshold hsv matrix so we only see green
+
+            Core.inRange(hsv, new Scalar (42, 50, 90), new Scalar (59, 117, 255), thresh);
 
             /*
              * Compute the average pixel value of each submat region. We're
@@ -333,7 +341,7 @@ public class FrieghtIconSee extends LinearOpMode
                         GREEN, // The color the rectangle is drawn in
                         -1); // Negative thickness means solid fill
             }
-            else if(max == avg3) // Was it from region 3?
+            else // Was it from region 3?
             {
                 position = SkystonePosition.RIGHT; // Record our analysis
 
@@ -354,7 +362,8 @@ public class FrieghtIconSee extends LinearOpMode
              * simply rendering the raw camera feed, because we called functions
              * to add some annotations to this buffer earlier up.
              */
-            return input;
+            //return input
+            return thresh;
         }
 
         /*
