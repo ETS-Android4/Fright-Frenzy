@@ -197,7 +197,7 @@ public class FrieghtIconSee extends LinearOpMode
             inputToHSV(firstFrame);
 
             //TODO: Input
-            Core.inRange(hsv, new Scalar (42, 50, 90), new Scalar (59, 117, 255), thresh);
+            Core.inRange(hsv, new Scalar (36, 51, 20), new Scalar (79, 213, 255), thresh);
 
             /*
              * Submats are a persistent reference to a region of the parent
@@ -254,7 +254,7 @@ public class FrieghtIconSee extends LinearOpMode
 
             //TODO: threshold hsv matrix so we only see green
 
-            Core.inRange(hsv, new Scalar (42, 50, 90), new Scalar (59, 117, 255), thresh);
+            Core.inRange(hsv, new Scalar (36, 51, 20), new Scalar (79, 213, 255), thresh);
 
             /*
              * Compute the average pixel value of each submat region. We're
