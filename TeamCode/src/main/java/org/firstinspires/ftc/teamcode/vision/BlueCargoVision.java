@@ -16,12 +16,14 @@ public class BlueCargoVision extends LinearOpMode {
         b.startGyro();
         waitForStart();
         level = v.iconPos();
-        b.goForward(-0.75, 12); //goes forward to blocks
-        b.slide(-0.75, 22); //left is negative
-        b.goForward(-0.75, 8);
+        b.goForward(-0.75,25); //goes forward to align with hub
+        b.turnLeft(90, 0.3); //robot turns to face the hub
+        b.goForward(-0.75, 6);
         b.raiseCargo(level);
-        b.goForward(0.3, 2);
-        b.turnLeft(90, 0.3);
-        b.goForward(-1, 78);
+        b.goForward(0.75, 10);
+        b.turnRight(90, 0.3);
+        b.goForward(-0.75, 50);
+        b.slide(0.75, 20);
+        b.goForward(-0.75, 14);
     }
 }

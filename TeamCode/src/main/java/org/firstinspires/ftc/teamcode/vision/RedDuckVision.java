@@ -16,15 +16,14 @@ public class RedDuckVision extends LinearOpMode {
         b.startGyro();
         waitForStart();
         level = v.iconPos();
-        b.goForward(-0.75,12); //goes forward to blocks
-        b.slide(-0.75, 24); //left is negative
-        b.goForward(-0.75, 8);
+        b.goForward(-0.75,25); //goes forward to align with hub
+        b.turnLeft(90, 0.3); //robot turns to face the hub
+        b.goForward(-0.75, 6);
         b.raiseCargo(level);
-        b.goForward(.5,2);
-        b.turnLeft(90,0.3);
-        b.goForward(-0.5, 72);
-        b.slide(0.5, 15);
+        b.goForward(0.75, 45);
+        b.turnRight(90, 0.3);
+        b.goForward(0.75, 50);
         b.duckSpinR();
-        b.slide(-0.5, 17);
+        b.goForward(-0.75, 40);
     }
 }

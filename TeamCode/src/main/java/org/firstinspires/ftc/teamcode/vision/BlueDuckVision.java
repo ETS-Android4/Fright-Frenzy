@@ -16,15 +16,14 @@ public class BlueDuckVision extends LinearOpMode {
         b.startGyro();
         waitForStart();
         level = v.iconPos();
-        b.goForward(-0.75,12); //goes forward to blocks
-        b.slide(0.75, 22); //left is negative
-        b.goForward(-0.75, 4.3);
+        b.goForward(-0.75,25); //goes forward to align with hub
+        b.turnRight(90, 0.3); //robot turns to face the hub
+        b.goForward(-0.75, 6);
         b.raiseCargo(level);
-        b.slide(-0.75, 40);
-        b.turnLeft(180,0.3);
-        b.goForward(-0.5, 18);
+        b.goForward(0.75, 45);
+        b.turnLeft(90, 0.3);
+        b.goForward(0.75, 50);
         b.duckSpin();
-        b.goForward(0.75, 22);
-        b.slide(0.5, 10);
+        b.goForward(-0.75, 40);
     }
 }
