@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.util.Timer;
 
 @TeleOp(group="test")
 public class ElevatorBoxTest extends LinearOpMode {
@@ -19,7 +20,6 @@ public class ElevatorBoxTest extends LinearOpMode {
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         waitForStart();
 
-        boolean timerRunning = false;
         Timer timer = new Timer();
         while (opModeIsActive()) {
             double distance = distanceSensor.getDistance(DistanceUnit.INCH);
@@ -30,15 +30,21 @@ public class ElevatorBoxTest extends LinearOpMode {
             } else if (gamepad2.dpad_up && distance >= 4) {
                 slide.setPower(1.0);
             }
-*/
+            */
+
             if(!gamepad2.dpad_up) {
-                timerRunning = false;
-            } else if(gamepad2.dpad_up && !timerRunning && distance <= 3.0) {
-                timerRunning = true;
-                timer.start(1500);
+                // if not raising the box turn off the timer
+                timer.stop();
+            } else if(gamepad2.dpad_up && !timer.isRunning() && distance <= 3.0) {
+                // if the timer is not already running and the box is starting
+                // to be raised from ramp position (dist < 3) then start the timer
+                // to give the servo time to move to the safe position
+                timer.start(1500); // 1.5 seconds
             }
 
-            if(gamepad2.dpad_up && timer.check()) {
+            if(gamepad2.dpad_up && timer.isRunning() && timer.check()) {
+                // only start to move up if the servo has had time
+                // to move to the safe position
                 slide.setPower(1.0);
             } else if (gamepad2.dpad_down && distance >= 2.0) {
                 slide.setPower(-1);
@@ -56,29 +62,12 @@ public class ElevatorBoxTest extends LinearOpMode {
                 cargo.setPosition(Servo.MAX_POSITION); // ramp pos
             }
             else {
-                cargo.setPosition(0.5); // safe pose
+                cargo.setPosition(0.35); // safe pose
             }
 
             telemetry.addData("distance:", distance);
             telemetry.addData("box servo:", cargo.getPosition());
             telemetry.update();
-        }
-    }
-
-    class Timer {
-        long end;
-        boolean exp;
-        public void start(long duration) {
-            end = System.currentTimeMillis() + duration;
-            exp = false;
-        }
-
-        public boolean check() {
-            if(!exp) {
-                exp = System.currentTimeMillis() >= end;
-            }
-
-            return exp;
         }
     }
 }
