@@ -16,32 +16,39 @@ import org.firstinspires.ftc.teamcode.lastyear.Timer;
 
 public class RepresentoClass {
 
+    //declares variables for gyro methods
     private static final double MAX_ANGLE = 5.0;
     private static final double ANGLE_ADJ_PERC = 0.2;
     private static final double ANGLE_ADJ_SPEED = 0.2;
 
+    //declares motor variables
     private DcMotor backLeftMotor;
     private DcMotor frontLeftMotor;
     private DcMotor frontRightMotor;
     private DcMotor backRightMotor;
     private DcMotor spinner;
+    private DcMotor sweeper;
+    private DcMotor linearSlideMotor;
 
+    //declares various sensors and OpModes
     private Gyro gyro;
     private LinearOpMode opMode;
     private DistanceSensor distanceSensor;
     private NormalizedColorSensor sensorColor;
     ModernRoboticsI2cRangeSensor rangeSensor;
     private Gyro2 miniGyro;
-    private DcMotor sweeper;
-    private DcMotor linearSlideMotor;
+
+    //declares Servos
     private Servo cargoServo;
 
     //private java.util.Timer timeKeeper = new java.util.Timer();
     private Timer timer4;
 
     public RepresentoClass (LinearOpMode om) {
+        //sets opMode
         this.opMode = om;
 
+        //sets each component to its place on the hardware map
         backLeftMotor = opMode.hardwareMap.get(DcMotor.class, "motor0");
         frontLeftMotor = opMode.hardwareMap.get(DcMotor.class, "motor1");
         frontRightMotor = opMode.hardwareMap.get(DcMotor.class, "motor2");
@@ -53,7 +60,6 @@ public class RepresentoClass {
         gyro = new Gyro(imu, opMode);
         distanceSensor = opMode.hardwareMap.get(DistanceSensor.class, "sensor4");
         sweeper = opMode.hardwareMap.get(DcMotor.class, "sweepo");
-        //stoneServo = opMode.hardwareMap.get(Servo.class, "stoneServo");
 
         //stops movement of robot quickly.
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -64,11 +70,13 @@ public class RepresentoClass {
         sweeper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
+    //methods that starts the gyros
     public void startGyro(){
         gyro.StartGyro();
         miniGyro = gyro.getMiniGyro();
     }
 
+    //method that ramps up the power, as to not jerk the robot at start
     public double ramp(double power, long startTime) {
         // ramp for 0.75 seconds
         long t = System.currentTimeMillis() - startTime;
@@ -79,6 +87,7 @@ public class RepresentoClass {
         }
     }
 
+    //method to turn right using gyro
     public void turnRight(double degrees, double power) {
         //
         gyro.resetWithDirection(Gyro.RIGHT);
@@ -111,6 +120,7 @@ public class RepresentoClass {
         // stops the motors
     }
 
+    //method to turn left using gyro
     public void turnLeft(double degrees, double power) {
         gyro.resetWithDirection(Gyro.LEFT);
         // tells gyro we are going left
@@ -142,6 +152,7 @@ public class RepresentoClass {
         // stops motors
     }
 
+    //method to slide using ticks (encoder) and corrects with gyro
     public void slide (double power, double distance) {
 
         // sets power
@@ -152,8 +163,8 @@ public class RepresentoClass {
         double leftY_G1 = 0;
         double leftX_G1 = -power;
 
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // sets encoder
 
         if (miniGyro != null) {
@@ -195,8 +206,8 @@ public class RepresentoClass {
     }
 
     public void goForwardOld(double power, double distance){
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // sets the encoders
 
         double rightY_G1 = 1.0 * power;
@@ -248,10 +259,11 @@ public class RepresentoClass {
         // sets motors to zero
     }
 
+    //method for moving forward and backward using ticks (encoder), corrects with gyro
     public void goForward(double power, double distance){
         // sets the encoders
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         double rightY_G1 = 1.0 * power;
         double rightX_G1 = 0.0;
@@ -303,8 +315,8 @@ public class RepresentoClass {
 
         // sets the correct variables to the motors
 
-        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // sets the encoders
 
         long ticks = ticksToInchesForward(distance);
@@ -330,21 +342,28 @@ public class RepresentoClass {
         // sets motors to zero
     }
 
+    //method main 4 wheel motors
     public void stopMotor(){
         frontLeftMotor.setPower(0.0);
         backLeftMotor.setPower(0.0);
         backRightMotor.setPower(0.0);
         frontRightMotor.setPower(0.0);
     }
+
+    //method for converting ticks to inches when going forward or backward
     public long ticksToInchesForward(double inches) {
         return (long) (inches * 38.7);
         //38.4
         // ticks forward formula
     }
+
+    //method for converting ticks to inches when sliding
     public long ticksToInchesSlide(double inches) {
         return (long) (inches * 52);
         // tick to slide inches formula 74.6
     }
+
+    //method for converting time into inches
     public long inchesToTime(double inches, double power) {
         return (long) (0.0384 * inches * 500.0 / power);
         // inches to time formula
@@ -356,8 +375,8 @@ public class RepresentoClass {
 //    }
 
     public void goForwardRamp(double power, double distance){
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         double rightY_G1 = 1.0 * power;
         double rightX_G1 = 0.0;
@@ -407,6 +426,7 @@ public class RepresentoClass {
         stopMotor();
     }
 
+    //method that raises cargo to the imputed level, places cargo, and lowers the linear slide
     public void raiseCargo(int level) {
         cargoServo.setPosition(0.5);
         double distance;
@@ -427,7 +447,7 @@ public class RepresentoClass {
             opMode.telemetry.update();
         }
         linearSlideMotor.setPower(0);
-        placeCargo();
+        shake();
         while (distanceSensor.getDistance(DistanceUnit.INCH) > 3) {
             linearSlideMotor.setPower(-0.3);
             opMode.telemetry.addData("Distance:", distance);
@@ -437,23 +457,14 @@ public class RepresentoClass {
         cargoServo.setPosition(1);
     }
 
+    //method that places cargo
     public void placeCargo() {
         cargoServo.setPosition(0);
         opMode.sleep(1000);
         cargoServo.setPosition(0.5);
-        cargoServo.setPosition(0.7);
-        opMode.sleep(1000);
-        cargoServo.setPosition(0.7);
-        cargoServo.setPosition(1);
-        opMode.sleep(1000);
-        cargoServo.setPosition(0.7);
-        cargoServo.setPosition(1);
-        cargoServo.setPosition(0.7);
-        opMode.sleep(1000);
-        cargoServo.setPosition(1);
-        cargoServo.setPosition(0.5);
     }
 
+    //method that picks up cargo, used for testing
     public void pickUpCargo() {
         cargoServo.setPosition(1);
         sweeper.setPower(1);
@@ -462,8 +473,25 @@ public class RepresentoClass {
         cargoServo.setPosition(0);
     }
 
+    //method that calls place cargo multiple times to shake out a stuck cargo
+    public void shake() {
+        placeCargo();
+        placeCargo();
+        placeCargo();
+        placeCargo();
+        placeCargo();
+    }
+
+    //method for duck spin (blue)
     public void duckSpin() {
         spinner.setPower(1);
+        opMode.sleep(5000);
+        spinner.setPower(0);
+    }
+
+    //method for duck spin (red)
+    public void duckSpinR() {
+        spinner.setPower(-1);
         opMode.sleep(5000);
         spinner.setPower(0);
     }

@@ -39,7 +39,7 @@ public class ElevatorBoxTest extends LinearOpMode {
                 // if the timer is not already running and the box is starting
                 // to be raised from ramp position (dist < 3) then start the timer
                 // to give the servo time to move to the safe position
-                timer.start(1500); // 1.5 seconds
+                timer.start(1000); // 1.5 seconds
             }
 
             if(gamepad2.dpad_up && timer.isRunning() && timer.check()) {

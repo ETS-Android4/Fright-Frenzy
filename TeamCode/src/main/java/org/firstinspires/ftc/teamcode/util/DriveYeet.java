@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp
 public class DriveYeet extends LinearOpMode {
+    //declares each sensor, motor, and servo
     private double servSpeed1;
     private DcMotor backLeftMotor;
     private DcMotor frontLeftMotor;
@@ -33,6 +34,7 @@ public class DriveYeet extends LinearOpMode {
         // --spinner servo
 
         // type name = value
+        //connects each motor, sensor, and servo to the hardware map
         sweepo = hardwareMap.get(DcMotor.class, "sweepo");
         slide = hardwareMap.get(DcMotor.class, "slide");
         cargo = hardwareMap.get(Servo.class, "boxservo");
@@ -46,6 +48,7 @@ public class DriveYeet extends LinearOpMode {
         distanceSensor = hardwareMap.get(DistanceSensor.class, "sensor4");
 
 
+        //sets each motor to have a brake method, this significantly reduces drift
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -53,25 +56,31 @@ public class DriveYeet extends LinearOpMode {
         spinner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        waitForStart();
+        waitForStart(); //waits for start
         while (opModeIsActive()){
 
+            //declares neccesary variables for mechinam wheels
             double rightX_G1;
             double rightY_G1;
             double leftX_G1;
             double leftY_G1;
+
+            //sets unit for distance sensor
             double distance = distanceSensor.getDistance(DistanceUnit.INCH);
 
+            //sets variables to the gamepad controls
             rightY_G1 = -gamepad1.right_stick_y;
             rightX_G1 = -gamepad1.right_stick_x;
             leftY_G1 = gamepad1.left_stick_y;
             leftX_G1 = -gamepad1.left_stick_x;
 
+            //uses math specific to mechinam wheels to go forward, backwards, and slide left and right
             double frontLeft = (rightX_G1 + rightY_G1 - leftX_G1);
             double backLeft = (rightX_G1 + rightY_G1 + leftX_G1);
             double backRight = (rightX_G1 - rightY_G1 + leftX_G1);
             double frontRight = (rightX_G1 - rightY_G1 - leftX_G1);
 
+            //sets power to doubles
             frontLeftMotor.setPower(frontLeft);
             backLeftMotor.setPower(backLeft);
             backRightMotor.setPower(backRight);
@@ -83,8 +92,9 @@ public class DriveYeet extends LinearOpMode {
             // --linear slide motor
             // --spinner servo
 
-            sweepo.setPower(-gamepad2.right_trigger);
+            sweepo.setPower(-gamepad2.right_trigger); //sets sweeper to gamepad 2, right trigger
 
+            //method that doesn't allow the linear slide to go up until basket is vertcal
             if (gamepad2.dpad_up && distance < 4) {
                 slide.setPower(0.3);
             } else if (gamepad2.dpad_up && distance >= 4) {
@@ -95,6 +105,7 @@ public class DriveYeet extends LinearOpMode {
                 slide.setPower(0);
             }
 
+            //method that makes the cargo box be in the correct position
             if (gamepad2.y && distance > 2.5 && cargo.getPosition() < 0.6){
                 cargo.setPosition(Servo.MIN_POSITION); // drop pos
             }
@@ -105,6 +116,7 @@ public class DriveYeet extends LinearOpMode {
                 cargo.setPosition(0.5); // safe pose
             }
 
+            //makes spinner power conditional to the right and left bumpers of gamepad 2
             if (gamepad2.right_bumper){
                 spinner.setPower(1.0);
             } else if (gamepad2.left_bumper) {
@@ -113,14 +125,7 @@ public class DriveYeet extends LinearOpMode {
                 spinner.setPower(0.0);
             }
 
-//            if (gamepad2.y){
-//                cargo.setPosition(Servo.MIN_POSITION);
-//            }
-//            else if (gamepad2.b){
-//                cargo.setPosition(0.5);
-//            }
-            // don't allow the linear slide to go up until basket is vertcal
-
+            //code for icon grabber
             if (gamepad1.a) {
                 iconServoL.setPosition(1);
                 iconServoR.setPosition(0);

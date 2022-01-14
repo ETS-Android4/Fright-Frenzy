@@ -152,8 +152,8 @@ public class RepBot {
         double leftY_G1 = 0;
         double leftX_G1 = -power;
 
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // sets encoder
 
         if (miniGyro != null) {
@@ -162,7 +162,7 @@ public class RepBot {
         long ticks = ticksToInchesSlide(distance);
         long start = System.currentTimeMillis();
         while (opMode.opModeIsActive()) {
-            int rotations = frontRightMotor.getCurrentPosition();
+            int rotations = backRightMotor.getCurrentPosition();
             if (rotations<0) {
                 rotations = rotations * -1;
             }
@@ -195,8 +195,8 @@ public class RepBot {
     }
 
     public void goForwardOld(double power, double distance){
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // sets the encoders
 
         double rightY_G1 = 1.0 * power;
@@ -217,7 +217,7 @@ public class RepBot {
         long ticks = ticksToInchesForward(distance);
         long start = System.currentTimeMillis();
         while (opMode.opModeIsActive()) {
-            int rotations = frontRightMotor.getCurrentPosition();
+            int rotations = backRightMotor.getCurrentPosition();
             if (rotations<0) {
                 rotations = rotations * -1;
             }
@@ -250,8 +250,8 @@ public class RepBot {
 
     public void goForward(double power, double distance){
         // sets the encoders
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         double rightY_G1 = 1.0 * power;
         double rightX_G1 = 0.0;
@@ -265,7 +265,7 @@ public class RepBot {
         long start = System.currentTimeMillis();
 
         while (opMode.opModeIsActive()) {
-            int rotations = frontRightMotor.getCurrentPosition();
+            int rotations = backRightMotor.getCurrentPosition();
             if (rotations<0) {
                 rotations = rotations * -1;
             }
@@ -303,15 +303,15 @@ public class RepBot {
 
         // sets the correct variables to the motors
 
-        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // sets the encoders
 
         long ticks = ticksToInchesForward(distance);
         long start = System.currentTimeMillis();
 
         while (opMode.opModeIsActive()) {
-            int rotations = backLeftMotor.getCurrentPosition();
+            int rotations = backRightMotor.getCurrentPosition();
             if (rotations<0) {
                 rotations = rotations * -1;
             }
@@ -355,8 +355,8 @@ public class RepBot {
 //    }
 
     public void goForwardRamp(double power, double distance){
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         double rightY_G1 = 1.0 * power;
         double rightX_G1 = 0.0;
@@ -373,7 +373,7 @@ public class RepBot {
             miniGyro.reset();
         }
         while (opMode.opModeIsActive()) {
-            int rotations = frontRightMotor.getCurrentPosition();
+            int rotations = backRightMotor.getCurrentPosition();
             if (rotations<0) {
                 rotations = rotations * -1;
             }

@@ -3,27 +3,27 @@ package org.firstinspires.ftc.teamcode.vision;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.RepresentoClass;
+import org.firstinspires.ftc.teamcode.RepBot;
 import org.firstinspires.ftc.teamcode.Vision;
 
 @Autonomous
 public class BlueDuckVision extends LinearOpMode {
-    int level;
+    int level; //creates integer to store where the team icon is
     @Override
     public void runOpMode() throws InterruptedException {
-        RepresentoClass b = new RepresentoClass(this);
-        Vision v = new Vision(this);
-        b.startGyro();
-        waitForStart();
-        level = v.iconPos();
-        b.goForward(-0.75,25); //goes forward to align with hub
-        b.turnRight(90, 0.3); //robot turns to face the hub
-        b.goForward(-0.75, 6);
-        b.raiseCargo(level);
-        b.goForward(0.75, 45);
-        b.turnLeft(90, 0.3);
-        b.goForward(0.75, 50);
-        b.duckSpin();
-        b.goForward(-0.75, 40);
+        RepBot b = new RepBot(this); //makes it so the RepBot (RepresentoClass but without a brake method, allows us to use a higher power) methods are available in this class
+        Vision v = new Vision(this); //makes easy OpenCV methods available here
+        b.startGyro(); //starts the gyro
+        waitForStart(); //waits for start
+        level = v.iconPos(); //identifies the position of the team icon on the field and stores it in
+        b.goForward(-0.75,25); //moves forward to align horizontally with the alliance hub
+        b.turnRight(90, 0.3); //the robot turns to face the alliance hub
+        b.goForward(-0.75, 6); //moves forward to be close enough to drop cargo
+        b.raiseCargo(level); //raises and drops cargo to the level recorded from v.iconPos()
+        b.goForward(0.75, 45); //moves backwards to wall
+        b.turnLeft(90, 0.3); //turns to face the duck spinner
+        b.goForward(0.75, 50); //goes forward to the duck spinner
+        b.duckSpin(); //spins the duck spinner for 4 seconds
+        b.goForward(-0.75, 40); //moves backwards to park in the depot
     }
 }

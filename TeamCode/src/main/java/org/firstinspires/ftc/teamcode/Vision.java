@@ -62,6 +62,7 @@ public class Vision {
     }
 
     public int iconPos() {
+        //returns value (1, 2, 3) that corresponds to our RepresentoClass method "raiseCargo()" to place the cargo at the corresponding level
         if (pipeline.getAnalysis() == IconPipeline.IconPosition.LEFT) {
             return 1;
         } else if (pipeline.getAnalysis() == IconPipeline.IconPosition.CENTER) {
@@ -73,6 +74,8 @@ public class Vision {
     }
 
     public IconPipeline.IconPosition pos () {
+        //returns the "LEFT", "RIGHT", or "CENTER"
+        //helps with telemetry output and testing
         return pipeline.getAnalysis();
     }
 
@@ -230,7 +233,7 @@ public class Vision {
              */
             inputToHSV(input);
 
-            //TODO: threshold hsv matrix so we only see green
+            //threshold hsv matrix so we only see green
 
             Core.inRange(hsv, new Scalar (36, 51, 20), new Scalar (79, 213, 255), thresh);
 
