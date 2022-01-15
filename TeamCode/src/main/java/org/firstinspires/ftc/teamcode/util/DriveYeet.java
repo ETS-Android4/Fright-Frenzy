@@ -57,6 +57,8 @@ public class DriveYeet extends LinearOpMode {
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart(); //waits for start
+
+        Timer timer = new Timer();
         while (opModeIsActive()){
 
             //declares neccesary variables for mechinam wheels
@@ -68,11 +70,16 @@ public class DriveYeet extends LinearOpMode {
             //sets unit for distance sensor
             double distance = distanceSensor.getDistance(DistanceUnit.INCH);
 
+            double wubble = 1.0;
+            if (gamepad1.right_bumper == true) {
+                wubble = 0.5;
+            }
+
             //sets variables to the gamepad controls
-            rightY_G1 = -gamepad1.right_stick_y;
-            rightX_G1 = -gamepad1.right_stick_x;
-            leftY_G1 = gamepad1.left_stick_y;
-            leftX_G1 = -gamepad1.left_stick_x;
+            rightY_G1 = -gamepad1.right_stick_y * wubble;
+            rightX_G1 = -gamepad1.right_stick_x * wubble;
+            leftY_G1 = gamepad1.left_stick_y * wubble;
+            leftX_G1 = -gamepad1.left_stick_x * wubble;
 
             //uses math specific to mechinam wheels to go forward, backwards, and slide left and right
             double frontLeft = (rightX_G1 + rightY_G1 - leftX_G1);
@@ -95,6 +102,27 @@ public class DriveYeet extends LinearOpMode {
             sweepo.setPower(-gamepad2.right_trigger); //sets sweeper to gamepad 2, right trigger
 
             //method that doesn't allow the linear slide to go up until basket is vertcal
+            if(!gamepad2.dpad_up) {
+                // if not raising the box turn off the timer
+                timer.stop();
+            } else if(gamepad2.dpad_up && !timer.isRunning() && distance <= 3.0) {
+                // if the timer is not already running and the box is starting
+                // to be raised from ramp position (dist < 3) then start the timer
+                // to give the servo time to move to the safe position
+                timer.start(1000); // 1.5 seconds
+            }
+
+            if(gamepad2.dpad_up && ((timer.isRunning() && timer.check()) || !timer.isRunning()) && distance <= 15.0) {
+                // only start to move up if the servo has had time
+                // to move to the safe position
+                slide.setPower(1.0);
+            } else if (gamepad2.dpad_down && distance >= 2.4) {
+                slide.setPower(-1);
+            } else {
+                slide.setPower(0);
+            }
+
+            /*
             if (gamepad2.dpad_up && distance < 4) {
                 slide.setPower(0.3);
             } else if (gamepad2.dpad_up && distance >= 4) {
@@ -104,8 +132,22 @@ public class DriveYeet extends LinearOpMode {
             } else {
                 slide.setPower(0);
             }
-
+*/
             //method that makes the cargo box be in the correct position
+            if(gamepad2.dpad_up || gamepad2.dpad_down) {
+                cargo.setPosition(0.28); // safe pose
+            }
+            else if (gamepad2.y && distance > 2.5 && cargo.getPosition() < 0.6){
+                cargo.setPosition(Servo.MIN_POSITION); // drop pos
+            }
+            else if(distance < 2.5) {
+                cargo.setPosition(Servo.MAX_POSITION); // ramp pos
+            }
+            else {
+                cargo.setPosition(0.28); // safe pose
+            }
+
+            /*
             if (gamepad2.y && distance > 2.5 && cargo.getPosition() < 0.6){
                 cargo.setPosition(Servo.MIN_POSITION); // drop pos
             }
@@ -115,7 +157,7 @@ public class DriveYeet extends LinearOpMode {
             else {
                 cargo.setPosition(0.5); // safe pose
             }
-
+*/
             //makes spinner power conditional to the right and left bumpers of gamepad 2
             if (gamepad2.right_bumper){
                 spinner.setPower(1.0);

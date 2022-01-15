@@ -42,11 +42,11 @@ public class ElevatorBoxTest extends LinearOpMode {
                 timer.start(1000); // 1.5 seconds
             }
 
-            if(gamepad2.dpad_up && timer.isRunning() && timer.check()) {
+            if(gamepad2.dpad_up && ((timer.isRunning() && timer.check()) || !timer.isRunning()) && distance <= 15.0) {
                 // only start to move up if the servo has had time
                 // to move to the safe position
                 slide.setPower(1.0);
-            } else if (gamepad2.dpad_down && distance >= 2.0) {
+            } else if (gamepad2.dpad_down && distance >= 2.4) {
                 slide.setPower(-1);
             } else {
                 slide.setPower(0);
