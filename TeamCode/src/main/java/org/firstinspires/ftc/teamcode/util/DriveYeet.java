@@ -70,7 +70,7 @@ public class DriveYeet extends LinearOpMode {
             //sets unit for distance sensor
             double distance = distanceSensor.getDistance(DistanceUnit.INCH);
 
-            double wubble = 1.0;
+            double wubble = 0.8;
             if (gamepad1.right_bumper == true) {
                 wubble = 0.5;
             }
@@ -135,16 +135,16 @@ public class DriveYeet extends LinearOpMode {
 */
             //method that makes the cargo box be in the correct position
             if(gamepad2.dpad_up || gamepad2.dpad_down) {
-                cargo.setPosition(0.28); // safe pose
+                cargo.setPosition(0.3); // safe pose
             }
             else if (gamepad2.y && distance > 2.5 && cargo.getPosition() < 0.6){
-                cargo.setPosition(Servo.MIN_POSITION); // drop pos
+                cargo.setPosition(cargo.MIN_POSITION); // drop pos
             }
             else if(distance < 2.5) {
-                cargo.setPosition(Servo.MAX_POSITION); // ramp pos
+                cargo.setPosition(cargo.MAX_POSITION); // ramp pos
             }
             else {
-                cargo.setPosition(0.28); // safe pose
+                cargo.setPosition(0.3); // safe pose
             }
 
             /*

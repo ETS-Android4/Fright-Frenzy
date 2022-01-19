@@ -14,6 +14,7 @@ public class VisionTest extends LinearOpMode {
         waitForStart();
         level = v.iconPos();
         while (opModeIsActive()) {
+            level = v.iconPos();
             telemetry.addData("Icon Position Number:", level);
             telemetry.addData("Icon Position", v.pos());
             telemetry.update();

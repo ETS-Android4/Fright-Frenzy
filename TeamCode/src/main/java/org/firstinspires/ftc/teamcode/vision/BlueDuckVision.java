@@ -16,12 +16,12 @@ public class BlueDuckVision extends LinearOpMode {
         b.startGyro(); //starts the gyro
         waitForStart(); //waits for start
         level = v.iconPos(); //identifies the position of the team icon on the field and stores it in
-        b.goForward(-0.75,25); //moves forward to align horizontally with the alliance hub
-        b.turnRight(90, 0.3); //the robot turns to face the alliance hub
+        b.goForward(-0.75,30); //moves forward to align horizontally with the alliance hub
+        b.turnLeft(90, 0.3); //the robot turns to face the alliance hub
         b.goForward(-0.75, 6); //moves forward to be close enough to drop cargo
         b.raiseCargo(level); //raises and drops cargo to the level recorded from v.iconPos()
         b.goForward(0.75, 45); //moves backwards to wall
-        b.turnLeft(90, 0.3); //turns to face the duck spinner
+        b.turnRight(90, 0.3); //turns to face the duck spinner
         b.goForward(0.75, 50); //goes forward to the duck spinner
         b.duckSpin(); //spins the duck spinner for 4 seconds
         b.goForward(-0.75, 40); //moves backwards to park in the depot
