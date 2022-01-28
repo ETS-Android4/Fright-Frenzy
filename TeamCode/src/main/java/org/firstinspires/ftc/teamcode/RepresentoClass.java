@@ -428,7 +428,7 @@ public class RepresentoClass {
 
     //method that raises cargo to the imputed level, places cargo, and lowers the linear slide
     public void raiseCargo(int level) {
-        cargoServo.setPosition(0.5);
+        cargoServo.setPosition(0.28);
         double distance;
         //sensor is 4.75 inches from ground
         //sensor is 1.5 inches from linear slide in resting position
@@ -461,7 +461,7 @@ public class RepresentoClass {
     public void placeCargo() {
         cargoServo.setPosition(0);
         opMode.sleep(1000);
-        cargoServo.setPosition(0.5);
+        cargoServo.setPosition(0.28);
     }
 
     //method that picks up cargo, used for testing
@@ -475,9 +475,6 @@ public class RepresentoClass {
 
     //method that calls place cargo multiple times to shake out a stuck cargo
     public void shake() {
-        placeCargo();
-        placeCargo();
-        placeCargo();
         placeCargo();
         placeCargo();
     }

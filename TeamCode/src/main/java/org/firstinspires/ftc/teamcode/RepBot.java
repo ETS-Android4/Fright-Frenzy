@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.lastyear.Gyro;
 import org.firstinspires.ftc.teamcode.lastyear.Gyro2;
-import org.firstinspires.ftc.teamcode.lastyear.Timer;
+import org.firstinspires.ftc.teamcode.util.Timer;
 
 public class RepBot {
 
@@ -407,17 +407,17 @@ public class RepBot {
     }
 
     public void raiseCargo(int level) {
-        cargoServo.setPosition(0.5);
+        cargoServo.setPosition(0.4);
         double distance;
         //sensor is 4.75 inches from ground
         //sensor is 1.5 inches from linear slide in resting position
         //bucket is 2 inches less than the slide
         if (level == 1) {
-            distance = 5.5;
+            distance = 3;
         } else if (level == 2) {
-            distance = 10;
+            distance = 4.5;
         } else {
-            distance = 16;
+            distance = 14;
         }
         opMode.sleep(2000);
         while (distanceSensor.getDistance(DistanceUnit.INCH) <= distance) {
@@ -427,6 +427,7 @@ public class RepBot {
         }
         linearSlideMotor.setPower(0);
         shake();
+        opMode.idle();
         while (distanceSensor.getDistance(DistanceUnit.INCH) > 3) {
             linearSlideMotor.setPower(-0.3);
             opMode.telemetry.addData("Distance:", distance);
@@ -439,7 +440,7 @@ public class RepBot {
     public void placeCargo() {
         cargoServo.setPosition(0);
         opMode.sleep(1000);
-        cargoServo.setPosition(0.5);
+        cargoServo.setPosition(0.28);
     }
 
     public void pickUpCargo() {
@@ -452,10 +453,11 @@ public class RepBot {
 
     public void shake() {
         placeCargo();
+        opMode.sleep(200);
         placeCargo();
+        opMode.sleep(200);
         placeCargo();
-        placeCargo();
-        placeCargo();
+        opMode.sleep(200);
     }
 
     public void duckSpin() {
