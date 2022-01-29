@@ -413,9 +413,9 @@ public class RepBot {
         //sensor is 1.5 inches from linear slide in resting position
         //bucket is 2 inches less than the slide
         if (level == 1) {
-            distance = 3;
+            distance = 3.5;
         } else if (level == 2) {
-            distance = 4.5;
+            distance = 6;
         } else {
             distance = 14;
         }
@@ -428,8 +428,9 @@ public class RepBot {
         linearSlideMotor.setPower(0);
         shake();
         opMode.idle();
+        goForward(0.3, 3);
         while (distanceSensor.getDistance(DistanceUnit.INCH) > 3) {
-            linearSlideMotor.setPower(-0.3);
+            linearSlideMotor.setPower(-0.5);
             opMode.telemetry.addData("Distance:", distance);
             opMode.telemetry.update();
         }
@@ -456,19 +457,17 @@ public class RepBot {
         opMode.sleep(200);
         placeCargo();
         opMode.sleep(200);
-        placeCargo();
-        opMode.sleep(200);
     }
 
     public void duckSpin() {
         spinner.setPower(1);
-        opMode.sleep(5000);
+        opMode.sleep(4000);
         spinner.setPower(0);
     }
 
     public void duckSpinR() {
-        spinner.setPower(-1);
-        opMode.sleep(5000);
+        spinner.setPower(-.75);
+        opMode.sleep(4000);
         spinner.setPower(0);
     }
 }
