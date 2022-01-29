@@ -58,7 +58,7 @@ public class DriveYeet extends LinearOpMode {
 
         waitForStart(); //waits for start
 
-        boolean usareldistance = true;
+        boolean useDistanceSensor = true;
 
         Timer timer = new Timer();
         while (opModeIsActive()){
@@ -73,9 +73,9 @@ public class DriveYeet extends LinearOpMode {
             double distance = distanceSensor.getDistance(DistanceUnit.INCH);
 
             // half speed while right bumper is pressed
-            double wubble = 1.0;
-            if (gamepad1.right_bumper == true) {
-                wubble = 0.5;
+            double wubble = 0.5;
+            if (gamepad1.right_bumper) {
+                wubble = 1;
             }
 
             //sets variables to the gamepad controls
@@ -102,15 +102,20 @@ public class DriveYeet extends LinearOpMode {
             // --linear slide motor
             // --spinner servo
 
-            sweepo.setPower(-gamepad2.right_trigger); //sets sweeper to gamepad 2, right trigger
+            if (gamepad2.right_trigger > 0) {
+                sweepo.setPower(-gamepad2.right_trigger);
+            } else if (gamepad2.left_trigger > 0) {
+                sweepo.setPower(gamepad2.left_trigger);
+            } else {
+                sweepo.setPower(0);
+            }
 
-            if (gamepad2.circle){
-                usareldistance = false;
+            if (gamepad2.circle) {
+                useDistanceSensor = true;
+            } else if (gamepad2.triangle) {
+                useDistanceSensor = false;
             }
-            else if (gamepad2.square){
-                usareldistance = true;
-            }
-            //method that doesn't allow the linear slide to go up until basket is vertcal
+
             if(!gamepad2.dpad_up) {
                 // if not raising the box turn off the timer
                 timer.stop();
@@ -125,11 +130,11 @@ public class DriveYeet extends LinearOpMode {
             // 1. dpad_up is pressed
             // 2. the servo timer is not running OR the server timer is running and 1 sec has passed
             // 3. the don't use distance sensor OR distance is less than 15
-            if(gamepad2.dpad_up && ((timer.isRunning() && timer.check()) || !timer.isRunning()) && (!usareldistance || distance <= 15.0)) {
+            if(gamepad2.dpad_up && ((timer.isRunning() && timer.check()) || !timer.isRunning()) && (!useDistanceSensor || distance <= 15.0)) {
                 // only start to move up if the servo has had time
                 // to move to the safe position
                 slide.setPower(1.0);
-            } else if (gamepad2.dpad_down && (!usareldistance || distance >= 2.4)) {
+            } else if (gamepad2.dpad_down && (!useDistanceSensor || distance >= 2.4)) {
                 slide.setPower(-1);
             } else {
                 slide.setPower(0);
@@ -150,27 +155,16 @@ public class DriveYeet extends LinearOpMode {
             if(gamepad2.dpad_up || gamepad2.dpad_down) {
                 cargo.setPosition(0.28); // safe pose
             }
-            else if (gamepad2.y && (!usareldistance || distance > 2.5) && cargo.getPosition() < 0.6){
+            else if (gamepad2.y && (!useDistanceSensor || distance > 2.5) && cargo.getPosition() < 0.6){
                 cargo.setPosition(Servo.MIN_POSITION); // drop pos
             }
-            else if((usareldistance && distance < 2.5) || (!usareldistance && gamepad2.a)) {
+            else if((useDistanceSensor && distance < 2.5) || (!useDistanceSensor && gamepad2.a)) {
                 cargo.setPosition(Servo.MAX_POSITION); // ramp pos
             }
             else {
                 cargo.setPosition(0.28); // safe pose
             }
 
-            /*
-            if (gamepad2.y && distance > 2.5 && cargo.getPosition() < 0.6){
-                cargo.setPosition(Servo.MIN_POSITION); // drop pos
-            }
-            else if(distance < 2.5 && !gamepad2.dpad_up) {
-                cargo.setPosition(Servo.MAX_POSITION); // ramp pos
-            }
-            else {
-                cargo.setPosition(0.5); // safe pose
-            }
-*/
             //makes spinner power conditional to the right and left bumpers of gamepad 2
             if (gamepad2.right_bumper){
                 spinner.setPower(1.0);
@@ -181,16 +175,16 @@ public class DriveYeet extends LinearOpMode {
             }
 
             //code for icon grabber
-            if (gamepad1.a) {
-                iconServoL.setPosition(1);
-                iconServoR.setPosition(0);
-            } else if (gamepad1.b) {
-                iconServoL.setPosition(1);
-                iconServoR.setPosition(1);
-            } else if (gamepad1.y) {
-                iconServoL.setPosition(0);
-                iconServoR.setPosition(0);
-            }
+//            if (gamepad1.a) {
+//                iconServoL.setPosition(1);
+//                iconServoR.setPosition(0);
+//            } else if (gamepad1.b) {
+//                iconServoL.setPosition(1);
+//                iconServoR.setPosition(1);
+//            } else if (gamepad1.y) {
+//                iconServoL.setPosition(0);
+//                iconServoR.setPosition(0);
+//            }
 
         }
     }
