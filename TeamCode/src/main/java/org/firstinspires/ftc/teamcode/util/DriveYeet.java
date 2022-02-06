@@ -112,7 +112,7 @@ public class DriveYeet extends LinearOpMode {
 
             if (gamepad2.circle) {
                 useDistanceSensor = true;
-            } else if (gamepad2.triangle) {
+            } else if (gamepad2.x) {
                 useDistanceSensor = false;
             }
 
@@ -155,7 +155,7 @@ public class DriveYeet extends LinearOpMode {
             if(gamepad2.dpad_up || gamepad2.dpad_down) {
                 cargo.setPosition(0.28); // safe pose
             }
-            else if (gamepad2.y && (!useDistanceSensor || distance > 2.5) && cargo.getPosition() < 0.6){
+            else if (gamepad2.triangle && (!useDistanceSensor || distance > 2.5) && cargo.getPosition() < 0.6){
                 cargo.setPosition(Servo.MIN_POSITION); // drop pos
             }
             else if((useDistanceSensor && distance < 2.5) || (!useDistanceSensor && gamepad2.a)) {
