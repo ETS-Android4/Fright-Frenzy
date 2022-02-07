@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.util.Button;
 import org.firstinspires.ftc.teamcode.util.Timer;
 
 @TeleOp
@@ -17,8 +18,11 @@ public class LinearSlideEncoder extends LinearOpMode {
         DcMotor slide = hardwareMap.get(DcMotor.class, "slide");
         Servo cargo = hardwareMap.get(Servo.class, "boxservo");
         DistanceSensor distanceSensor = hardwareMap.get(DistanceSensor.class, "sensor4");
+
         DigitalChannel tummyTime = hardwareMap.get(DigitalChannel.class, "tummy time");
-        tummyTime.setMode(DigitalChannel.Mode.INPUT);
+        //tummyTime.setMode(DigitalChannel.Mode.INPUT);
+        Button slideDown = new Button(tummyTime);
+
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -29,10 +33,17 @@ public class LinearSlideEncoder extends LinearOpMode {
 
         while (opModeIsActive()) {
             double distance = distanceSensor.getDistance(DistanceUnit.INCH);
+            slideDown.update();
+            if(slideDown.initialDown()) {
+                slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                slideDown.clearInitialDown();
+            }
+
             if(!gamepad2.dpad_up) {
                 // if not raising the box turn off the timer
                 timer.stop();
-            } else if(gamepad2.dpad_up && !timer.isRunning() && tummyTime.getState()== false) {
+            } else if(gamepad2.dpad_up && !timer.isRunning() && slideDown.isPressed()) {
                 // if the timer is not already running and the box is starting
                 // to be raised from ramp position (dist < 3) then start the timer
                 // to give the servo time to move to the safe position
@@ -43,7 +54,7 @@ public class LinearSlideEncoder extends LinearOpMode {
                 // only start to move up if the servo has had time
                 // to move to the safe position
                 slide.setPower(1.0);
-            } else if (gamepad2.dpad_down && tummyTime.getState()==true) {
+            } else if (gamepad2.dpad_down && !slideDown.isPressed()) {
                 slide.setPower(-1);
             } else {
                 slide.setPower(0);
@@ -52,10 +63,10 @@ public class LinearSlideEncoder extends LinearOpMode {
             if(gamepad2.dpad_up || gamepad2.dpad_down) {
                 cargo.setPosition(0.28); // safe pose
             }
-            else if (gamepad2.y && tummyTime.getState()==true && cargo.getPosition() < 0.6){
+            else if (gamepad2.y && !slideDown.isPressed() && cargo.getPosition() < 0.6){
                 cargo.setPosition(Servo.MIN_POSITION); // drop pos
             }
-            else if(tummyTime.getState()==false) {
+            else if(slideDown.isPressed()) {
                 cargo.setPosition(Servo.MAX_POSITION); // ramp pos
             }
             else {
