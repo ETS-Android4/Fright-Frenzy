@@ -19,6 +19,9 @@ public class RepBot {
     private static final double MAX_ANGLE = 5.0;
     private static final double ANGLE_ADJ_PERC = 0.2;
     private static final double ANGLE_ADJ_SPEED = 0.2;
+    int one = 0;
+    int two = 0;
+    int three = 0;
 
     private DcMotor backLeftMotor;
     private DcMotor frontLeftMotor;
@@ -413,13 +416,14 @@ public class RepBot {
         //sensor is 1.5 inches from linear slide in resting position
         //bucket is 2 inches less than the slide
         if (level == 1) {
-            distance = 3.5;
+            distance = 2.5;
+            goForward(0.3, 1);
         } else if (level == 2) {
             distance = 6;
         } else {
-            distance = 14;
+            distance = 14.5;
         }
-        opMode.sleep(2000);
+        opMode.sleep(1000);
         while (distanceSensor.getDistance(DistanceUnit.INCH) <= distance) {
             linearSlideMotor.setPower(1);
             opMode.telemetry.addData("Distance:", distance);
@@ -469,5 +473,25 @@ public class RepBot {
         spinner.setPower(-.75);
         opMode.sleep(4000);
         spinner.setPower(0);
+    }
+
+    public int iconConf(Vision v) {
+        for (int i = 0; i < 10; i++) {
+            opMode.sleep(100);
+            if (v.iconPos() == 1) {
+                one++;
+            } else if (v.iconPos() == 2) {
+                two++;
+            } else if (v.iconPos() == 3) {
+                three++;
+            }
+        }
+        if (one > two && one > three) {
+            return 1;
+        } else if (two > one && two > three) {
+            return 2;
+        } else {
+            return 3;
+        }
     }
 }
