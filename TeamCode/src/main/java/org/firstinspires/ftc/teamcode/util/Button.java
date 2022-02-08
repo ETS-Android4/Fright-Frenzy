@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 public class Button {
     DigitalChannel dc;
-    boolean clicked = false;
+    boolean initialDown = false;
 
     static final int DOWN = 0;
     static final int UP = 1;
@@ -25,22 +25,21 @@ public class Button {
         return !dc.getState();
     }
 
-    public boolean clicked() {
-        boolean val = clicked;
-        if(clicked) {
-            clicked = false;
-        }
+    public boolean initialDown() {
+        return initialDown;
+    }
 
-        return val;
+    public void clearInitialDown() {
+        initialDown = false;
     }
 
     public void update() {
         if(dc.getState()) {
             lastState = UP;
-            clicked = false;
+            initialDown = false;
         } else {
             if(lastState == UP) {
-                clicked = true;
+                initialDown = true;
             }
             lastState = DOWN;
         }
