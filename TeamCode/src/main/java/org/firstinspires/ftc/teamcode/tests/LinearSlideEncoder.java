@@ -20,7 +20,6 @@ public class LinearSlideEncoder extends LinearOpMode {
         DistanceSensor distanceSensor = hardwareMap.get(DistanceSensor.class, "sensor4");
 
         DigitalChannel tummyTime = hardwareMap.get(DigitalChannel.class, "tummy time");
-        //tummyTime.setMode(DigitalChannel.Mode.INPUT);
         Button slideDown = new Button(tummyTime);
 
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -30,20 +29,23 @@ public class LinearSlideEncoder extends LinearOpMode {
         waitForStart();
 
         Timer timer = new Timer();
+        boolean downLatch = slideDown.isPressed();
 
         while (opModeIsActive()) {
             double distance = distanceSensor.getDistance(DistanceUnit.INCH);
-            slideDown.update();
-            if(slideDown.initialDown()) {
+
+            //slideDown.update();
+            //if(slideDown.initialDown()) {
+            if(slideDown.isPressed()) {
                 slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                slideDown.clearInitialDown();
+            //    slideDown.clearInitialDown();
             }
 
             if(!gamepad2.dpad_up) {
                 // if not raising the box turn off the timer
                 timer.stop();
-            } else if(gamepad2.dpad_up && !timer.isRunning() && slideDown.isPressed()) {
+            } else if(gamepad2.dpad_up && !timer.isRunning() && downLatch) {
                 // if the timer is not already running and the box is starting
                 // to be raised from ramp position (dist < 3) then start the timer
                 // to give the servo time to move to the safe position
@@ -54,7 +56,7 @@ public class LinearSlideEncoder extends LinearOpMode {
                 // only start to move up if the servo has had time
                 // to move to the safe position
                 slide.setPower(1.0);
-            } else if (gamepad2.dpad_down && !slideDown.isPressed()) {
+            } else if (gamepad2.dpad_down && !downLatch) {
                 slide.setPower(-1);
             } else {
                 slide.setPower(0);
@@ -63,14 +65,20 @@ public class LinearSlideEncoder extends LinearOpMode {
             if(gamepad2.dpad_up || gamepad2.dpad_down) {
                 cargo.setPosition(0.28); // safe pose
             }
-            else if (gamepad2.y && !slideDown.isPressed() && cargo.getPosition() < 0.6){
+            else if (gamepad2.y && !downLatch && cargo.getPosition() < 0.6){
                 cargo.setPosition(Servo.MIN_POSITION); // drop pos
             }
-            else if(slideDown.isPressed()) {
+            else if(downLatch) {
                 cargo.setPosition(Servo.MAX_POSITION); // ramp pos
             }
             else {
                 cargo.setPosition(0.28); // safe pose
+            }
+
+            if(gamepad2.dpad_up) {
+                downLatch = false;
+            } else if(slideDown.isPressed()) {
+                downLatch = true;
             }
 
             telemetry.addData("distance:", distance);
