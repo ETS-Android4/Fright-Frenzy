@@ -34,12 +34,10 @@ public class LinearSlideEncoder extends LinearOpMode {
         while (opModeIsActive()) {
             double distance = distanceSensor.getDistance(DistanceUnit.INCH);
 
-            //slideDown.update();
-            //if(slideDown.initialDown()) {
+            // Reset the slide motor encoder when the touch sensor is pressed
             if(slideDown.isPressed()) {
                 slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            //    slideDown.clearInitialDown();
             }
 
             if(!gamepad2.dpad_up) {
@@ -47,9 +45,9 @@ public class LinearSlideEncoder extends LinearOpMode {
                 timer.stop();
             } else if(gamepad2.dpad_up && !timer.isRunning() && downLatch) {
                 // if the timer is not already running and the box is starting
-                // to be raised from ramp position (dist < 3) then start the timer
+                // to be raised from ramp position (downLatch = true) then start the timer
                 // to give the servo time to move to the safe position
-                timer.start(1000); // 1.5 seconds
+                timer.start(1000); // 1 second
             }
 
             if(gamepad2.dpad_up && ((timer.isRunning() && timer.check()) || !timer.isRunning()) && distance <= 15.0) {
@@ -75,6 +73,10 @@ public class LinearSlideEncoder extends LinearOpMode {
                 cargo.setPosition(0.28); // safe pose
             }
 
+            // The downLatch is set when the button is first pressed and
+            // stays set until dpad_up is pressed. This prevents the box server
+            // from twitching if the slide is down but the button is not always
+            // pressed (like when driving over bumps)
             if(gamepad2.dpad_up) {
                 downLatch = false;
             } else if(slideDown.isPressed()) {
