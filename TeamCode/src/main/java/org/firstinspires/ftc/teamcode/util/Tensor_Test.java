@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.util;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.TensorFlow;
 
 import java.util.List;
 
+@Disabled
 @Autonomous
 public class Tensor_Test extends LinearOpMode {
     @Override

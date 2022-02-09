@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.RepBot;
 import org.firstinspires.ftc.teamcode.Vision;
 
 @Autonomous
-public class BlueDuckFirst extends LinearOpMode {
+public class BlueDuckWait extends LinearOpMode {
     int level; //creates integer to store where the team icon is
     @Override
     public void runOpMode() throws InterruptedException {
@@ -16,6 +16,7 @@ public class BlueDuckFirst extends LinearOpMode {
         b.startGyro(); //starts the gyro
         waitForStart(); //waits for start
         sleep(2000); //sleeps to give gyro time to callibrate
+        sleep(8000); //sleeps to wait for other team's robot
         level = b.iconConf(v); //detects the icon 10 times and sets level to the placement that appears the most
         telemetry.addData("Icon Position Number:", level); //adds level to telemetry for testing
         telemetry.addData("Icon Position", v.pos()); //adds position to telemetry for testing

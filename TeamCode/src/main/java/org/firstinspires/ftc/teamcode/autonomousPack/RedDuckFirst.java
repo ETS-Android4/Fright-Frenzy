@@ -9,9 +9,6 @@ import org.firstinspires.ftc.teamcode.Vision;
 @Autonomous
 public class RedDuckFirst extends LinearOpMode {
     int level;
-    int one = 0;
-    int two = 0;
-    int three = 0;
     @Override
     public void runOpMode() throws InterruptedException {
         RepBot b = new RepBot(this);
@@ -20,7 +17,6 @@ public class RedDuckFirst extends LinearOpMode {
         waitForStart();
         sleep(2000);
         level = b.iconConf(v);
-//        level = v.iconPos();
         telemetry.addData("Icon Position Number:", level);
         telemetry.addData("Icon Position", v.pos());
         telemetry.update();

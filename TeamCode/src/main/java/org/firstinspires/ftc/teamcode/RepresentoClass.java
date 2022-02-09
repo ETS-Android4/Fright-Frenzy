@@ -21,6 +21,11 @@ public class RepresentoClass {
     private static final double ANGLE_ADJ_PERC = 0.2;
     private static final double ANGLE_ADJ_SPEED = 0.2;
 
+    //variables to hold in for loop for confidence
+    int one = 0;
+    int two = 0;
+    int three = 0;
+
     //declares motor variables
     private DcMotor backLeftMotor;
     private DcMotor frontLeftMotor;
@@ -428,19 +433,20 @@ public class RepresentoClass {
 
     //method that raises cargo to the imputed level, places cargo, and lowers the linear slide
     public void raiseCargo(int level) {
-        cargoServo.setPosition(0.28);
+        cargoServo.setPosition(0.4);
         double distance;
         //sensor is 4.75 inches from ground
         //sensor is 1.5 inches from linear slide in resting position
         //bucket is 2 inches less than the slide
         if (level == 1) {
-            distance = 5.5;
+            distance = 2.5;
+            goForward(0.3, 1);
         } else if (level == 2) {
-            distance = 10;
+            distance = 6;
         } else {
-            distance = 16;
+            distance = 14.5;
         }
-        opMode.sleep(2000);
+        opMode.sleep(1000);
         while (distanceSensor.getDistance(DistanceUnit.INCH) <= distance) {
             linearSlideMotor.setPower(1);
             opMode.telemetry.addData("Distance:", distance);
@@ -448,8 +454,10 @@ public class RepresentoClass {
         }
         linearSlideMotor.setPower(0);
         shake();
+        opMode.idle();
+        goForward(0.3, 3);
         while (distanceSensor.getDistance(DistanceUnit.INCH) > 3) {
-            linearSlideMotor.setPower(-0.3);
+            linearSlideMotor.setPower(-0.5);
             opMode.telemetry.addData("Distance:", distance);
             opMode.telemetry.update();
         }
@@ -491,5 +499,26 @@ public class RepresentoClass {
         spinner.setPower(-1);
         opMode.sleep(5000);
         spinner.setPower(0);
+    }
+
+    //method for getting confidnce in the placement of the icon to decrease errors
+    public int iconConf(Vision v) {
+        for (int i = 0; i < 10; i++) {
+            opMode.sleep(100);
+            if (v.iconPos() == 1) {
+                one++;
+            } else if (v.iconPos() == 2) {
+                two++;
+            } else if (v.iconPos() == 3) {
+                three++;
+            }
+        }
+        if (one > two && one > three) {
+            return 1;
+        } else if (two > one && two > three) {
+            return 2;
+        } else {
+            return 3;
+        }
     }
 }

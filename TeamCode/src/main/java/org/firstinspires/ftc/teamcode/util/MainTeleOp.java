@@ -1,17 +1,16 @@
 package org.firstinspires.ftc.teamcode.util;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@Disabled
 @TeleOp
-public class DriveYeet extends LinearOpMode {
+public class MainTeleOp extends LinearOpMode {
     //declares each sensor, motor, and servo
     private double servSpeed1;
     private DcMotor backLeftMotor;
@@ -49,6 +48,9 @@ public class DriveYeet extends LinearOpMode {
         backRightMotor = hardwareMap.get(DcMotor.class, "motor3");
         distanceSensor = hardwareMap.get(DistanceSensor.class, "sensor4");
 
+        DigitalChannel tummyTime = hardwareMap.get(DigitalChannel.class, "tummy time");
+        Button slideDown = new Button(tummyTime);
+
 
         //sets each motor to have a brake method, this significantly reduces drift
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -56,14 +58,23 @@ public class DriveYeet extends LinearOpMode {
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         spinner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         waitForStart(); //waits for start
 
-        boolean useDistanceSensor = true;
-
         Timer timer = new Timer();
+        boolean downLatch = slideDown.isPressed();
+
         while (opModeIsActive()){
+
+            // Reset the slide motor encoder when the touch sensor is pressed
+            if(slideDown.isPressed()) {
+                slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
 
             //declares neccesary variables for mechinam wheels
             double rightX_G1;
@@ -112,16 +123,10 @@ public class DriveYeet extends LinearOpMode {
                 sweepo.setPower(0);
             }
 
-            if (gamepad2.circle) {
-                useDistanceSensor = true;
-            } else if (gamepad2.x) {
-                useDistanceSensor = false;
-            }
-
             if(!gamepad2.dpad_up) {
                 // if not raising the box turn off the timer
                 timer.stop();
-            } else if(gamepad2.dpad_up && !timer.isRunning() && distance <= 3.0) {
+            } else if(gamepad2.dpad_up && !timer.isRunning() && downLatch) {
                 // if the timer is not already running and the box is starting
                 // to be raised from ramp position (dist < 3) then start the timer
                 // to give the servo time to move to the safe position
@@ -132,11 +137,11 @@ public class DriveYeet extends LinearOpMode {
             // 1. dpad_up is pressed
             // 2. the servo timer is not running OR the server timer is running and 1 sec has passed
             // 3. the don't use distance sensor OR distance is less than 15
-            if(gamepad2.dpad_up && ((timer.isRunning() && timer.check()) || !timer.isRunning()) && (!useDistanceSensor || distance <= 15.0)) {
+            if(gamepad2.dpad_up && ((timer.isRunning() && timer.check()) || !timer.isRunning()) && distance <= 15.0) {
                 // only start to move up if the servo has had time
                 // to move to the safe position
                 slide.setPower(1.0);
-            } else if (gamepad2.dpad_down && (!useDistanceSensor || distance >= 2.4)) {
+            } else if (gamepad2.dpad_down && !downLatch) {
                 slide.setPower(-1);
             } else {
                 slide.setPower(0);
@@ -157,14 +162,24 @@ public class DriveYeet extends LinearOpMode {
             if(gamepad2.dpad_up || gamepad2.dpad_down) {
                 cargo.setPosition(0.28); // safe pose
             }
-            else if (gamepad2.triangle && (!useDistanceSensor || distance > 2.5) && cargo.getPosition() < 0.6){
+            else if (gamepad2.triangle && !downLatch && cargo.getPosition() < 0.6){
                 cargo.setPosition(Servo.MIN_POSITION); // drop pos
             }
-            else if((useDistanceSensor && distance < 2.5) || (!useDistanceSensor && gamepad2.a)) {
+            else if(downLatch) {
                 cargo.setPosition(Servo.MAX_POSITION); // ramp pos
             }
             else {
                 cargo.setPosition(0.28); // safe pose
+            }
+
+            // The downLatch is set when the button is first pressed and
+            // stays set until dpad_up is pressed. This prevents the box server
+            // from twitching if the slide is down but the button is not always
+            // pressed (like when driving over bumps)
+            if(gamepad2.dpad_up) {
+                downLatch = false;
+            } else if(slideDown.isPressed()) {
+                downLatch = true;
             }
 
             //makes spinner power conditional to the right and left bumpers of gamepad 2

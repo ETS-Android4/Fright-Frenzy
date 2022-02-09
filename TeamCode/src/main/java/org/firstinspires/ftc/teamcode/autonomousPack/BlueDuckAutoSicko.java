@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.autonomousPack;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.RepBot;
 import org.firstinspires.ftc.teamcode.Vision;
 
+@Disabled
 @Autonomous
 public class BlueDuckAutoSicko extends LinearOpMode {
     int level;
@@ -23,9 +25,6 @@ public class BlueDuckAutoSicko extends LinearOpMode {
         b.goForward(-0.75,14.5); //goes forward to blocks
         b.slide(0.75, 24); //left is negative
         b.goForward(-0.75, 10);
-        if (level == 1) {
-            b.goForward(.5, 1);
-        }
         b.raiseCargo(level);
         b.goForward(0.75, 4);
         b.slide(-0.75, 42);

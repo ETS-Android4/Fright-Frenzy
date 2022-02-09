@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.autonomousPack;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.RepBot;
 import org.firstinspires.ftc.teamcode.Vision;
 
+@Disabled
 @Autonomous
 public class BlueDuckAutoSickoWait extends LinearOpMode {
     int level;

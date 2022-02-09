@@ -15,23 +15,23 @@ public class RedDuckWait extends LinearOpMode {
         Vision v = new Vision(this);
         b.startGyro();
         waitForStart();
-        sleep(14000);
-        level = v.iconPos();
+        sleep(2000);
+        sleep(8000);
+        level = b.iconConf(v);
         telemetry.addData("Icon Position Number:", level);
         telemetry.addData("Icon Position", v.pos());
         telemetry.update();
-        b.goForward(-0.75,12); //goes forward to blocks
-        b.slide(-0.75, 18); //left is negative
-        b.goForward(-0.75, 1.7);
-        b.raiseCargo(level);
-        b.goForward(0.75, 6);
-        b.slide(0.75, 46);
-        b.turnLeft(180,0.3);
-        b.goForward(-0.2, 16);
-        b.turnRight(65, 0.3);
+        b.slide(0.7, 20);
+        b.slide(0.5, 5);
+        b.turnLeft(50, 0.3);
         b.duckSpinR();
-        b.turnLeft(65, 0.3);
-        b.goForward(0.75, 16);
-        b.slide(-0.5, 7);
+        b.turnRight(50, 0.3);
+        b.goForward(-0.7, 39);
+        b.turnRight(90, 0.3);
+        b.goForwardNoGyro(0.7, 11);
+        b.goForward(-0.7, 31);
+        b.raiseCargo(level);
+        b.goForward(0.7, 32);
+        b.slide(-0.7, 14);
     }
 }

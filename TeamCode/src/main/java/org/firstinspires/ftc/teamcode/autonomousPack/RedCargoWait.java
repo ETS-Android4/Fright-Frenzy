@@ -15,7 +15,7 @@ public class RedCargoWait extends LinearOpMode {
         Vision v = new Vision(this);
         b.startGyro();
         waitForStart();
-        sleep(13000);
+        sleep(10000);
         level = v.iconPos();
         telemetry.addData("Icon Position Number:", level);
         telemetry.addData("Icon Position", v.pos());
