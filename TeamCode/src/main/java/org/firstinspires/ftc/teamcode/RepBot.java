@@ -63,6 +63,8 @@ public class RepBot {
 //        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         sweeper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
@@ -419,7 +421,7 @@ public class RepBot {
             distance = 2.5;
             goForward(0.3, 1);
         } else if (level == 2) {
-            distance = 6;
+            distance = 7;
         } else {
             distance = 14.5;
         }
@@ -433,11 +435,15 @@ public class RepBot {
         shake();
         opMode.idle();
         goForward(0.3, 3);
-        while (distanceSensor.getDistance(DistanceUnit.INCH) > 3) {
-            linearSlideMotor.setPower(-0.5);
-            opMode.telemetry.addData("Distance:", distance);
-            opMode.telemetry.update();
+        int encoder = linearSlideMotor.getCurrentPosition();
+        if (level != 1) {
+            while ((distanceSensor.getDistance(DistanceUnit.INCH) > 3) && (linearSlideMotor.getCurrentPosition() - encoder) < 1000) {
+                linearSlideMotor.setPower(-0.5);
+                opMode.telemetry.addData("Distance:", distance);
+                opMode.telemetry.update();
+            }
         }
+
         linearSlideMotor.setPower(0);
         cargoServo.setPosition(1);
     }

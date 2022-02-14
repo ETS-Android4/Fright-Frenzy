@@ -59,6 +59,7 @@ public class MainTeleOp extends LinearOpMode {
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         spinner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -137,7 +138,7 @@ public class MainTeleOp extends LinearOpMode {
             // 1. dpad_up is pressed
             // 2. the servo timer is not running OR the server timer is running and 1 sec has passed
             // 3. the don't use distance sensor OR distance is less than 15
-            if(gamepad2.dpad_up && ((timer.isRunning() && timer.check()) || !timer.isRunning()) && distance <= 15.0) {
+            if(gamepad2.dpad_up && ((timer.isRunning() && timer.check()) || !timer.isRunning()) /*&& distance <= 15.0*/) {
                 // only start to move up if the servo has had time
                 // to move to the safe position
                 slide.setPower(1.0);

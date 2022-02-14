@@ -22,7 +22,7 @@ public class BlueCargoAuto extends LinearOpMode {
         telemetry.update(); //updates telemetry
         b.goForward(-0.75,12.5); //goes forward to icon
         b.slide(-0.75, 23); //slides to front of alliance hub
-        b.goForward(-0.75, 8.4); //goes forward to be close to the alliance hub
+        b.goForward(-0.75, 7.4); //goes forward to be close to the alliance hub
         b.turnLeft(.25, 0.3); //robot turns left to straighten out
         b.raiseCargo(level); //robot raises the cargo and drops the cargo into the alliance hub
         b.goForward(0.3, 2); //robot backs away from alliance hub

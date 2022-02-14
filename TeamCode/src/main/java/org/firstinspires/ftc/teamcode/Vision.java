@@ -67,10 +67,10 @@ public class Vision {
             return 1;
         } else if (pipeline.getAnalysis() == IconPipeline.IconPosition.CENTER) {
             return 2;
-        } else if (pipeline.getAnalysis() == IconPipeline.IconPosition.RIGHT) {
+        } else /*if (pipeline.getAnalysis() == IconPipeline.IconPosition.RIGHT)*/ {
             return 3;
         }
-        return 0;
+        //return 0;
     }
 
     public IconPipeline.IconPosition pos () {
